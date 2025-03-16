@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"
+      defer
+    ></script>
+    <script type="module" src="/src/js/system/budget.js"></script>
+    <title>Budget</title>
+  </head>
+  <body>
+    <div
+      class="fixed inset-0 flex justify-center items-center bg-white z-50 hidden"
+      id="loader"
+    >
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <div
+      id="redirectToEventModal"
+      tabindex="-1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <div class="p-4 md:p-5 text-center">
+            <svg
+              class="mx-auto mb-4 text-gray-400 w-12 h-12 light:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3
+              class="mb-5 text-md font-normal text-gray-500 light:text-gray-400"
+            >
+              Please create an event first before managing your budget.
+            </h3>
+            <a
+              class="customBg text-white py-2.5 px-4 rounded-lg"
+              href="events.html"
+              >Click here</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="bg-white border-gray-200 light:bg-gray-900">
+      <div
+        class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4"
+      >
+        <a
+          href="home.html"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img src="/src/imgs/G.png" class="h-10" alt="Gazellian Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap light:text-white"
+            >Gazellian</span
+          >
+        </a>
+        <div
+          class="flex items-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse"
+        >
+          <div class="flex justify-center items-center" id="userLoggedIn"></div>
+
+          <button
+            data-collapse-toggle="mega-menu"
+            type="button"
+            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 light:text-gray-400 light:hover:bg-gray-700 light:focus:ring-gray-600"
+            aria-controls="mega-menu"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open main menu</span>
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mega-menu"
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse"
+          >
+            <li>
+              <a
+                href="/home.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-gray-500 md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="/aboutUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >About Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="/serviceProviders.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Service Providers</a
+              >
+            </li>
+            <li>
+              <a
+                href="/contactUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Contact Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="/termsAndPrivacy.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Terms & Privacy</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- second navbar -->
+    <nav class="bg-white border-1 border-gray-200 light:bg-gray-900">
+      <div
+        class="flex flex-wrap items-center justify-center max-w-screen-xl mx-auto p-4"
+      >
+        <div
+          id="mega-menu"
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-24 rtl:space-x-reverse"
+          >
+            <li>
+              <a
+                href="customerDashboard.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-gray-500 md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                aria-current="page"
+                >Dashboard</a
+              >
+            </li>
+            <li>
+              <a
+                href="smartBudgeting.html"
+                class="block py-2 px-3 customTextColor font-bold border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Budget</a
+              >
+            </li>
+            <li>
+              <a
+                href="providerManager.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Manage Service Providers</a
+              >
+            </li>
+            <li>
+              <a
+                href="customerBooking.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Bookings</a
+              >
+            </li>
+            <li>
+              <a
+                href="events.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >My Events</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Smart Budgeting Container -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+      <div class="flex justify-between">
+        <h1 class="text-lg font-bold text-gray-900 mb-6">Manage Budget</h1>
+        <!-- select option for event  -->
+        <select
+          id="event_options"
+          class="w-full py-2 text-gray-700 rounded-lg bg-white text-sm"
+          style="width: fit-content !important; height: fit-content !important"
+        ></select>
+      </div>
+
+      <!-- Overall Budget Display -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="flex justify-between mb-2">
+          <h2 class="font-semibold text-gray-900 mb-4">Overall Budget</h2>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-700 font-medium">Total Budget</span>
+          <div class="flex">
+            <span class="text-gray-700 font-medium" id="total_budget"></span>
+            <button
+              data-modal-target="updateBudget"
+              data-modal-toggle="updateBudget"
+              class="focus:outline-none font-sm rounded-lg text-sm ps-2 text-center"
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Layout for Budget Allocation and Event Form -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+        <!-- Budget Allocation Section (35%) -->
+        <div class="bg-white shadow-md rounded-lg p-6 md:col-span-4">
+          <h3 class="font-semibold text-gray-900 mb-4 flex justify-between">
+            Allocated Budget
+            <button
+              type="button"
+              class="rounded-md px-2 focus:outline-none hover:bg-gray-200 py-2"
+              style="cursor: pointer"
+              data-modal-target="createCategory"
+              data-modal-toggle="createCategory"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+            </button>
+          </h3>
+
+          <div class="space-y-4 pb-3" id="allocated_budget_container"></div>
+          <div
+            class="flex pe-3 text-sm justify-end"
+            id="total_allocated_budget"
+          ></div>
+        </div>
+
+        <!-- Event Budget Form (65%) -->
+        <div class="bg-white shadow-md rounded-lg p-6 md:col-span-8">
+          <div class="font-semibold text-gray-900 mb-4 flex justify-between">
+            <h3
+              class="font-semibold text-gray-900 mb-4"
+              id="selected_category"
+            ></h3>
+            <!-- Select Category -->
+            <div class="flex">
+              <select
+                id="category_options"
+                class="w-full py-2 text-gray-700 rounded-lg bg-white text-sm"
+                style="width: 120px !important"
+              ></select>
+              <button
+                type="button"
+                data-modal-target="createExpense"
+                data-modal-toggle="createExpense"
+                class="ms-2 rounded-md px-2 focus:outline-none hover:bg-gray-200"
+                style="cursor: pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="overflow-x-auto shadow-md sm:rounded-lg">
+              <table
+                class="w-full text-sm text-left rtl:text-right text-gray-500 light:text-gray-400"
+              >
+                <thead
+                  class="text-xs text-gray-700 uppercase bg-gray-50 light:bg-gray-700 light:text-gray-400"
+                >
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Expense</th>
+                    <th scope="col" class="px-6 py-3">Allocated Amount</th>
+                    <th scope="col" class="px-6 py-3">Final Cost</th>
+                    <th scope="col" class="px-6 py-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="expense_table"></tbody>
+                <thead
+                  class="text-xs text-gray-700 uppercase bg-gray-50 light:bg-gray-700 light:text-gray-400"
+                >
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Total</th>
+                    <th scope="col" class="px-6 py-3" id="total_expenses"></th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3"
+                      id="total_actual_spent"
+                    ></th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggested Providers Section -->
+      <!-- <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">
+          Suggested Service Providers
+        </h2>
+        <ul
+          id="suggestedProviders"
+          class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-center"
+        >
+          <li class="flex flex-col items-center space-y-2 mt-2">
+            <img
+              src="src/imgs/provider1.jpg"
+              class="w-16 h-16 rounded-full object-cover shadow"
+              alt="Provider"
+            />
+            <div class="text-center">
+              <p class="text-gray-900 font-semibold">Elegant Weddings</p>
+              <span class="text-sm text-gray-500">Budget Fit: ₱30,000</span>
+            </div>
+          </li>
+          <li class="flex flex-col items-center space-y-2 mt-2">
+            <img
+              src="src/imgs/provider2.jpg"
+              class="w-16 h-16 rounded-full object-cover shadow"
+              alt="Provider"
+            />
+            <div class="text-center">
+              <p class="text-gray-900 font-semibold">Pro Photography</p>
+              <span class="text-sm text-gray-500">Budget Fit: ₱20,000</span>
+            </div>
+          </li>
+          <li class="flex flex-col items-center space-y-2 mt-2">
+            <img
+              src="src/imgs/provider3.jpg"
+              class="w-16 h-16 rounded-full object-cover shadow"
+              alt="Provider"
+            />
+            <div class="text-center">
+              <p class="text-gray-900 font-semibold">Elite Catering</p>
+              <span class="text-sm text-gray-500">Budget Fit: ₱25,000</span>
+            </div>
+          </li>
+          <li class="flex flex-col items-center space-y-2 mt-2">
+            <img
+              src="src/imgs/provider1.jpg"
+              class="w-16 h-16 rounded-full object-cover shadow"
+              alt="Provider"
+            />
+            <div class="text-center">
+              <p class="text-gray-900 font-semibold">Elegant Weddings</p>
+              <span class="text-sm text-gray-500">Budget Fit: ₱30,000</span>
+            </div>
+          </li>
+        </ul>
+      </div> -->
+    </div>
+
+    <!-- update budget modal -->
+    <div
+      id="updateBudget"
+      tabindex="-1"
+      aria-hidden="true"
+      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <!-- Modal header -->
+          <div
+            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t light:border-gray-600 border-gray-200"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 light:text-white">
+              Update Budget
+            </h3>
+            <button
+              type="button"
+              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center light:hover:bg-gray-600 light:hover:text-white closeModal"
+              data-modal-hide="updateBudget"
+            >
+              <svg
+                class="w-3 h-3 closeModal"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only closeModal">Close modal</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-4 md:p-5">
+            <form class="space-y-4" id="update_budget_form">
+              <div>
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                  >Budget</label
+                >
+                <input
+                  type="number"
+                  name="budget"
+                  id="totalEventBudget"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+                  placeholder="Enter Budget"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full text-white customBg focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center light:bg-purple-600 light:hover:customBg light:focus:ring-purple-800"
+                id="updateButton"
+              >
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create category modal -->
+    <div
+      id="createCategory"
+      tabindex="-1"
+      aria-hidden="true"
+      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full max-h-full"
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <!-- Modal header -->
+          <div
+            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t light:border-gray-600 border-gray-200"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 light:text-white">
+              Add New Category
+            </h3>
+            <button
+              type="button"
+              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center light:hover:bg-gray-600 light:hover:text-white"
+              data-modal-hide="createCategory"
+            >
+              <svg
+                class="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-4 md:p-5">
+            <form class="space-y-4" id="category_form">
+              <!-- Select Category -->
+              <label
+                for="category"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Category</label
+              >
+              <select
+                id="categories"
+                name="category_id"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+              ></select>
+              <div>
+                <label
+                  for="allocated_amount"
+                  class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                  >Allocate Amount</label
+                >
+                <input
+                  type="number"
+                  name="allocated_amount"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+                  placeholder="Enter Allocated Amount"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  for="actual_spent"
+                  class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                  >Actual Spent</label
+                >
+                <input
+                  type="number"
+                  name="actual_spent"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+                  placeholder="Enter Actual Spent"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full text-white customBg focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center light:bg-purple-600 light:hover:customBg light:focus:ring-purple-800"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create expense modal -->
+    <div
+      id="createExpense"
+      tabindex="-1"
+      aria-hidden="true"
+      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <!-- Modal header -->
+          <div
+            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t light:border-gray-600 border-gray-200"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 light:text-white">
+              Add New Expense
+            </h3>
+            <button
+              type="button"
+              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center light:hover:bg-gray-600 light:hover:text-white"
+              data-modal-hide="createExpense"
+            >
+              <svg
+                class="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only">Close modal</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-4 md:p-5">
+            <form class="space-y-4" id="expense_form">
+              <!-- input expense name -->
+              <label
+                for="expense_name"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Expense Name</label
+              >
+              <input
+                name="expense_name"
+                type="text"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+                required
+              />
+              <!-- input expense amount -->
+              <label
+                for="allocated-amount"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Allocate Amount</label
+              >
+              <input
+                name="allocated_amount"
+                type="number"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+              />
+              <!-- input final cost -->
+              <label
+                for="actual_spent"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Final Cost</label
+              >
+              <input
+                name="actual_spent"
+                type="number"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+              />
+              <button
+                type="submit"
+                id="updateButton"
+                class="w-full text-white customBg focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center light:bg-purple-600 light:hover:customBg light:focus:ring-purple-800"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create expense modal -->
+    <div
+      id="updateExpenseModal"
+      tabindex="-1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <!-- Modal header -->
+          <div
+            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t light:border-gray-600 border-gray-200"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 light:text-white">
+              Update
+            </h3>
+            <button
+              type="button"
+              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center light:hover:bg-gray-600 light:hover:text-white closeModal"
+              data-modal-hide="updateExpense"
+            >
+              <svg
+                class="w-3 h-3 closeModal"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+              <span class="sr-only closeModal">Close modal</span>
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="p-4 md:p-5">
+            <form class="space-y-4" id="update_form">
+              <!-- input expense name -->
+              <label
+                for="expense-name"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Expense Name</label
+              >
+              <input
+                id="expense_name"
+                name="expense-name"
+                type="text"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+                required
+              />
+              <!-- input expense amount -->
+              <label
+                for="allocated-amount"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Allocate Amount</label
+              >
+              <input
+                id="allocated_amount"
+                name="allocated_amount"
+                type="number"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+              />
+              <!-- input final cost -->
+              <label
+                for="final-cost"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Final Cost</label
+              >
+              <input
+                id="actual_spent"
+                name="actual_spent"
+                type="number"
+                class="block w-full py-2 px-3 border border-gray-300 rounded-lg text-gray-900 text-sm focus:ring-purple-500 focus:border-purple-500 bg-white light:bg-gray-600 light:border-gray-500 light:placeholder-gray-400 light:text-white"
+              />
+              <button
+                type="submit"
+                class="w-full text-white customBg focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center light:bg-purple-600 light:hover:customBg light:focus:ring-purple-800"
+              >
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- delete confirmation modal -->
+    <div
+      id="deleteModal"
+      tabindex="-1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <div class="p-4 md:p-5 text-center">
+            <svg
+              class="mx-auto mb-4 text-gray-400 w-12 h-12 light:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3
+              class="mb-5 text-md font-normal text-gray-500 light:text-gray-400"
+            >
+              Are you sure you want to delete this?
+            </h3>
+            <button
+              type="button"
+              class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 light:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-2 py-3 text-center"
+              id="deleteButton"
+            >
+              Yes, I'm sure
+            </button>
+            <button
+              type="button"
+              class="py-2.5 px-3 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 light:focus:ring-gray-700 light:bg-gray-800 light:text-gray-400 light:border-gray-600 light:hover:text-white light:hover:bg-gray-700 closeModal"
+            >
+              No, cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      if (localStorage.getItem("token") != null) {
+        document.getElementById(
+          "userLoggedIn"
+        ).innerHTML = `<a href="../notifications.html"  id="notificationBadge"></a><a href="../notifications.html" class="me-3 position-relative inline-block">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+  </svg>
+</a>
+        <a href="../chat.html"  id="messageBadge"><a href="/chat.html" class="me-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+      </svg>
+      </a>
+      <a    class="cursor-pointer me-4" ${
+        localStorage.getItem("type") == "customer"
+          ? `href="customerDashboard.html"`
+          : `href="serviceprovider/serviceProviderDashboard.html"`
+      }
+      }><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-7">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9M15 17V5M21 17V12" />
+      </svg>
+       </a>
+      <button
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800"
+        id="logoutBtn">
+        Logout
+      </button>`;
+      }
+
+      if (localStorage.getItem("token") == null) {
+        document.getElementById("userLoggedIn").innerHTML = `
+      <a href="index.html"
+        class="text-gray-800 light:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Login
+      </a>
+      <a href="register.html"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Sign up
+      </a>`;
+      }
+    </script>
+  </body>
+</html>

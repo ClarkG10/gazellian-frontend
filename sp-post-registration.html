@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script type="module" src="src/js/auth/sp-post-registration.js"></script>
+    <title>Register</title>
+  </head>
+  <style>
+    input[type="file"]::-webkit-file-upload-button {
+      background-color: #f9fafb;
+      color: #111827;
+      border-right: 1px solid #d1d5db;
+      border-radius: 4px;
+    }
+
+    input[type="file"]::-webkit-file-upload-button:hover {
+      background-color: #e5e7eb;
+    }
+  </style>
+  <body>
+    <div class="flex justify-end me-5 items-center">
+      <button
+        class="me-1 cursor-pointer customTextColor hover:font-bold"
+        id="logoutBtn"
+      >
+        Logout
+      </button>
+      <!-- <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+        />
+      </svg> -->
+    </div>
+    <div class="centerContainer shadow-xl px-10 py-4">
+      <form id="post_register_form">
+        <div class="flex items-center justify-center mb-4">
+          <h1
+            class="text-2xl font-bold text-gray-900 light:text-white customTextColor"
+          >
+            Post Registration
+          </h1>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <div>
+            <!-- Business Name -->
+            <div class="w-full">
+              <label
+                for="business_name"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Business Name
+              </label>
+              <input
+                type="text"
+                id="business_name"
+                name="business_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter Business Name"
+                required
+              />
+            </div>
+
+            <!-- Business Email -->
+            <div class="w-full">
+              <label
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Business Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter Business Email"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label
+                for="years_in_business"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Years In Business</label
+              >
+              <input
+                type="number"
+                id="years_in_business"
+                name="years_in_business"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter Years In Business"
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                for="location"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+                >Business Location</label
+              >
+              <input
+                type="text"
+                id="location"
+                name="location"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter Business Location"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label
+                for="description"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 min-h-[120px] resize-y light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter a detailed description..."
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div>
+            <div class="mb-4">
+              <label
+                for="website_url"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >Website Link (optional)</label
+              >
+              <input
+                type="text"
+                id="website_url"
+                name="website_url"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter Website Link"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="businessType"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Select Your Business Type(s)
+              </label>
+              <p class="text-xs text-gray-500 mb-2">
+                Hold <strong>CTRL</strong> (Windows) or
+                <strong>Command ⌘</strong> (Mac) to select multiple options.
+              </p>
+              <select
+                id="businessType"
+                name="business_type[]"
+                multiple
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+                size="8"
+              >
+                <option class="p-2" value=" Event Planning & Coordination">
+                  Event Planning & Coordination
+                </option>
+                <option class="p-2" value="Wedding Planning">
+                  Wedding Planning
+                </option>
+                <option class="p-2" value="Corporate Event Management">
+                  Corporate Event Management
+                </option>
+                <option class="p-2" value="Concert & Festival Organizers">
+                  Concert & Festival Organizers
+                </option>
+                <option class="p-2" value="Party & Social Event Planning">
+                  Party & Social Event Planning
+                </option>
+
+                <option class="p-2" value="Catering Services">
+                  Catering Services
+                </option>
+                <option class="p-2" value="Food Trucks & Mobile Catering">
+                  Food Trucks & Mobile Catering
+                </option>
+                <option class="p-2" value="Food Trucks & Mobile Catering">
+                  Food Trucks & Mobile Catering
+                </option>
+
+                <option class="p-2" value="Event Photography">
+                  Event Photography
+                </option>
+                <option class="p-2" value="Event Videography">
+                  Event Videography
+                </option>
+                <option class="p-2" value="Photo Booth Rental">
+                  Photo Booth Rental
+                </option>
+
+                <option class="p-2" value="Venue Rental">Venue Rental</option>
+                <option class="p-2" value="Tent & Canopy Rentals">
+                  Tent & Canopy Rentals
+                </option>
+
+                <option class="p-2" value="Event Decoration Services">
+                  Event Decoration Services
+                </option>
+                <option class="p-2" value="Florist & Floral Arrangements">
+                  Florist & Floral Arrangements
+                </option>
+
+                <option class="p-2" value="Live Band & Musicians">
+                  Live Band & Musicians
+                </option>
+                <option class="p-2" value="DJ & Sound System Services">
+                  DJ & Sound System Services
+                </option>
+
+                <option class="p-2" value="Makeup & Beauty Services">
+                  Makeup & Beauty Services
+                </option>
+                <option class="p-2" value="Formal Wear & Suit Rentals">
+                  Formal Wear & Suit Rentals
+                </option>
+
+                <option class="p-2" value="Custom Invitations & Printing">
+                  Custom Invitations & Printing
+                </option>
+                <option class="p-2" value="Event Branding & Signage">
+                  Event Branding & Signage
+                </option>
+
+                <option class="p-2" value="Luxury Car & Limo Rentals">
+                  Luxury Car & Limo Rentals
+                </option>
+                <option class="p-2" value="Guest Shuttle & Transportation">
+                  Guest Shuttle & Transportation
+                </option>
+
+                <option class="p-2" value="Event Security Services">
+                  Event Security Services
+                </option>
+                <option class="p-2" value="First Aid & Medical Services">
+                  First Aid & Medical Services
+                </option>
+
+                <option class="p-2" value="Virtual Event Hosting & Webinars">
+                  Virtual Event Hosting & Webinars
+                </option>
+
+                <option class="p-2" value="custom services">
+                  Other Custom Services
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="customBg text-white w-full mb-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm: px-5 py-2.5 text-center light:bg-blue-600 light:hover:bg-blue-700 light:focus:ring-blue-800"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

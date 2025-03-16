@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script type="module" src="src/js/utils/utils.js"></script>
+    <title>Home</title>
+  </head>
+  <body>
+    <div
+      class="fixed inset-0 flex justify-center items-center bg-white z-50 hidden"
+      id="loader"
+    >
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <nav class="bg-white border-1 border-gray-200 light:bg-gray-900">
+      <div
+        class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4"
+      >
+        <a
+          href="home.html"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img src="src/imgs/G.png" class="h-10" alt="Gazellian Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap light:text-white"
+            >Gazellian</span
+          >
+        </a>
+        <div
+          class="flex items-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse"
+        >
+          <div class="flex justify-center items-center" id="userLoggedIn"></div>
+
+          <button
+            data-collapse-toggle="mega-menu"
+            type="button"
+            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 light:text-gray-400 light:hover:bg-gray-700 light:focus:ring-gray-600"
+            aria-controls="mega-menu"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open main menu</span>
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mega-menu"
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse"
+          >
+            <li>
+              <a
+                href="home.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-gray-500 md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="aboutUs.html"
+                class="block py-2 px-3 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >About Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="serviceProviders.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Service Providers</a
+              >
+            </li>
+            <li>
+              <a
+                href="contactUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Contact Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="termsAndPrivacy.html"
+                class="block py-2 px-3 customTextColor font-bold border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Terms & Privacy</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Terms & Privacy Section -->
+    <section
+      class="max-w-6xl mx-auto py-12 mt-3 px-6 bg-white shadow-sm rounded-lg"
+    >
+      <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">
+        Terms & Privacy Policy
+      </h1>
+
+      <!-- Terms of Service -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+          Terms of Service
+        </h2>
+        <p class="text-gray-600 mb-4">
+          By using Gazellian, you agree to the following terms and conditions.
+          Failure to comply may result in account suspension or termination.
+        </p>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          1. User Responsibilities
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            Users must provide accurate and truthful information when
+            registering.
+          </li>
+          <li>
+            Any fraudulent activities, including fake bookings or misleading
+            service listings, are strictly prohibited.
+          </li>
+          <li>
+            Users must not engage in abusive or harmful behavior towards others
+            on the platform.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          2. Service Provider Obligations
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            Service providers must ensure that their listings accurately
+            represent their services.
+          </li>
+          <li>
+            Providers must fulfill all accepted bookings unless exceptional
+            circumstances arise.
+          </li>
+          <li>
+            Repeated cancellations or poor service may result in suspension or
+            removal from the platform.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          3. Bookings & Payments
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            All bookings must be made through the Gazellian platform to ensure
+            security and accountability.
+          </li>
+          <li>
+            Payments are processed through a secure gateway; Gazellian does not
+            store sensitive financial data.
+          </li>
+          <li>
+            Refunds and disputes must be handled in accordance with Gazellian’s
+            refund policy.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          4. Dispute Resolution
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            Any disputes between users and service providers should first be
+            resolved through communication.
+          </li>
+          <li>
+            If a resolution cannot be reached, users may escalate disputes to
+            Gazellian’s support team.
+          </li>
+          <li>
+            Gazellian reserves the right to make final decisions on unresolved
+            disputes.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Privacy Policy -->
+      <div>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+          Privacy Policy
+        </h2>
+        <p class="text-gray-600 mb-4">
+          Your privacy is important to us. This policy outlines how we collect,
+          use, and protect your personal information.
+        </p>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          1. Data Collection
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            We collect personal details such as name, email, and phone number
+            for account creation and communication.
+          </li>
+          <li>
+            Activity data, such as bookings and interactions, may be stored for
+            analytics and support purposes.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          2. How We Use Your Information
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>To facilitate service bookings and provider recommendations.</li>
+          <li>To provide customer support and resolve issues.</li>
+          <li>
+            To improve platform functionality based on user behavior and
+            feedback.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          3. Data Protection
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            We use encryption and secure servers to protect your personal data.
+          </li>
+          <li>
+            Only authorized personnel have access to sensitive user information.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          4. Third-Party Sharing
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>We do not sell your personal data to third parties.</li>
+          <li>
+            Your information may be shared with service providers only as
+            necessary for bookings.
+          </li>
+          <li>
+            We may disclose data when required by law or in response to legal
+            requests.
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">
+          5. Cookies & Tracking
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>
+            Our platform uses cookies to enhance user experience and personalize
+            content.
+          </li>
+          <li>Users can disable cookies through their browser settings.</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold text-gray-800 mt-6">6. User Rights</h3>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>Users can request access to their stored data at any time.</li>
+          <li>
+            Users may update or delete their accounts, subject to our retention
+            policies.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Last Updated -->
+      <p class="text-gray-500 text-sm mt-8">Last Updated: February 2024</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center py-6 mt-12">
+      <p>© 2024 Gazellian. All rights reserved.</p>
+    </footer>
+    <script>
+      if (localStorage.getItem("token") != null) {
+        document.getElementById(
+          "userLoggedIn"
+        ).innerHTML = `<a href="notifications.html" id="notificationBadge"></a><a href="notifications.html" class="me-3 position-relative inline-block">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+  </svg>
+</a><a href="chat.html"  id="messageBadge"><a href="chat.html" class="me-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+      </svg>
+      </a>
+      <a    class="cursor-pointer me-4" ${
+        localStorage.getItem("type") == "customer"
+          ? `href="customer/customerDashboard.html"`
+          : `href="service-provider/spDashboard.html"`
+      }
+      }><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-7">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9M15 17V5M21 17V12" />
+      </svg>
+       </a>
+      <button type="button" id="logoutBtn"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Logout
+      </button>`;
+      }
+
+      if (localStorage.getItem("token") == null) {
+        document.getElementById("userLoggedIn").innerHTML = `
+      <a href="index.html"
+        class="text-gray-800 light:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800 me-2">
+        Login
+      </a>
+      <a href="register.html"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Sign up
+      </a>`;
+      }
+    </script>
+  </body>
+</html>

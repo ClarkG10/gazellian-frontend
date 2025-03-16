@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script type="module" src="src/js/system/serviceProviders.js"></script>
+    <script type="module" src="src/js/utils/utils.js"></script>
+
+    <title>Service Providers</title>
+  </head>
+  <body>
+    <div
+      class="fixed inset-0 flex justify-center items-center bg-white z-50 hidden"
+      id="loader"
+    >
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- confirmation modal -->
+    <div
+      id="confirmationModal"
+      class="fixed hidden z-100 w-full h-fit-content flex justify-center fade-up"
+    >
+      <div class="w-1/8 max-w-md customBg rounded-xl mt-10 shadow-xl">
+        <div class="flex justify-center items-center mb-3">
+          <h4 class="text-xs font-bold text-white pt-4 flex justify-between">
+            Booking Request Sent
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5 ms-1 pb-1"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </h4>
+        </div>
+      </div>
+    </div>
+    <!-- confirmation modal -->
+    <div
+      id="bookingModal"
+      class="fixed hidden z-100 w-full h-full flex items-center justify-center"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="w-1/4 max-w-md p-6 bg-white rounded-xl">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-md font-bold text-gray-900">Book a Service</h3>
+          <button
+            class="flex items-center justify-center px-2 h-6 text-xs rounded-full font-medium text-gray-700 hover:bg-gray-300"
+            onclick="closeBookingModal()"
+          >
+            X
+          </button>
+        </div>
+        <div class="mt-2">
+          <form id="booking_form">
+            <div>
+              <label
+                for="servicesOptions"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Service
+              </label>
+              <select
+                id="servicesOptions"
+                name="service_id"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              ></select>
+              <label
+                for="eventOptions"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event
+              </label>
+              <select
+                id="eventOptions"
+                name="event_id"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              ></select>
+              <!-- event date input -->
+              <label
+                for="eventDate"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Booking Date
+              </label>
+              <input
+                type="date"
+                id="eventDate"
+                name="event_date"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <label
+                for="request_amount"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Request an Amount
+              </label>
+              <input
+                type="number"
+                id="request_amount"
+                name="requested_amount"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter an amount"
+                required
+              />
+            </div>
+
+            <!-- textarea for note -->
+            <label
+              for="note"
+              class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+            >
+              Note (optional)
+            </label>
+            <textarea
+              id="note"
+              name="note"
+              class="mb-4 block w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 h-32 p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+            ></textarea>
+            <!-- button book now -->
+            <button
+              type="submit"
+              class="w-full py-2 text-sm font-medium text-white rounded-lg customBg"
+              id="bookingButton"
+            >
+              Book Now
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <nav class="bg-white border-gray-200 light:bg-gray-900 border-1">
+      <div
+        class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4"
+      >
+        <a
+          href="home.html"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img src="src/imgs/G.png" class="h-10" alt="Gazellian Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap light:text-white"
+            >Gazellian</span
+          >
+        </a>
+        <div
+          class="flex items-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse"
+        >
+          <div class="flex justify-center items-center" id="userLoggedIn"></div>
+
+          <button
+            data-collapse-toggle="mega-menu"
+            type="button"
+            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 light:text-gray-400 light:hover:bg-gray-700 light:focus:ring-gray-600"
+            aria-controls="mega-menu"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open main menu</span>
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mega-menu"
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse"
+          >
+            <li>
+              <a
+                href="home.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-gray-500 md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="aboutUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >About Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="serviceProviders.html"
+                class="block py-2 px-3 customTextColor font-bold border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Service Providers</a
+              >
+            </li>
+            <li>
+              <a
+                href="contactUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Contact Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="termsAndPrivacy.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Terms & Privacy</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="flex min-h-screen mt-2 px-30">
+      <!-- filter -->
+      <div class="p-4 flex flex-col gap-3">
+        <!-- search filter -->
+        <form id="search_form">
+          <div class="flex items-center gap-1">
+            <input
+              type="text"
+              id="search"
+              name="keyword"
+              placeholder="Search for services"
+              class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              class="w-1/3 customBg text-sm text-white p-1 rounded-lg hover:bg-gray-700"
+            >
+              Search
+            </button>
+          </div>
+        </form>
+        <div class="flex items-center gap-1 font-semibold mt-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+            />
+          </svg>
+          Filter
+        </div>
+        <!-- Price Range Filter -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700"
+            >Price Range</label
+          >
+          <div class="flex items-center gap-2 mt-1">
+            <input
+              type="number"
+              id="min-price"
+              name="min-price"
+              placeholder="Min Price"
+              min="0"
+              class="w-1/2 p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+
+            <span class="text-sm text-gray-500">-</span>
+
+            <input
+              type="number"
+              id="max-price"
+              name="max-price"
+              placeholder="Max Price"
+              min="0"
+              class="w-1/2 p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Service Provider Category Filter -->
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700"
+            >Service Category</label
+          >
+          <select
+            id="category"
+            name="category"
+            class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">All Categories</option>
+            <option value="makeup">Makeup Artist</option>
+            <option value="photography">Photographer & Videographer</option>
+            <option value="venue">Venues</option>
+            <option value="catering">Catering</option>
+          </select>
+        </div>
+
+        <!-- Ratings Filter -->
+        <div>
+          <label for="rating" class="block text-sm font-medium text-gray-700"
+            >Ratings</label
+          >
+          <select
+            id="rating"
+            name="rating"
+            class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-yellow-500 focus:border-yellow-500"
+          >
+            <option value="">All Ratings</option>
+            <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+            <option value="4">⭐⭐⭐⭐ (4 Stars & Up)</option>
+            <option value="3">⭐⭐⭐ (3 Stars & Up)</option>
+            <option value="2">⭐⭐ (2 Stars & Up)</option>
+          </select>
+        </div>
+
+        <!-- Location Filter -->
+        <div>
+          <label for="location" class="block text-sm font-medium text-gray-700"
+            >Location</label
+          >
+          <select
+            id="location"
+            name="location"
+            class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-green-500 focus:border-green-500"
+          >
+            <option value="">All Locations</option>
+            <option value="butuan">Butuan City</option>
+            <option value="cdo">Cagayan de Oro</option>
+            <option value="davao">Davao City</option>
+          </select>
+        </div>
+      </div>
+      <div class="w-full">
+        <!-- card -->
+        <div class="flex w-full mt-4 ms-4 flex-col items-end space-y-3">
+          <!-- pagination for reviews -->
+          <div class="flex flex-row items-center justify-between w-full ps-8">
+            <span class="text-xs text-gray-700 me-2 mt-2.5">
+              Showing
+              <span id="startEntry" class="font-semibold text-gray-900">1</span>
+              to
+              <span id="endEntry" class="font-semibold text-gray-900">0</span>
+              of
+              <span id="totalEntries" class="font-semibold text-gray-900"
+                >0</span
+              >
+            </span>
+            <div class="inline-flex mt-2">
+              <button
+                id="prevPage"
+                class="flex items-center justify-center px-4 h-6 text-xs font-medium text-white customBg rounded hover:bg-gray-300 me-2"
+              >
+                Prev
+              </button>
+              <button
+                id="nextPage"
+                class="flex items-center justify-center px-4 h-6 text-xs font-medium text-white customBg border-l border-gray-300 rounded hover:bg-gray-300"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          <!-- Service Provider Card -->
+          <div id="serviceProviderCard"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      if (localStorage.getItem("token") != null) {
+        document.getElementById(
+          "userLoggedIn"
+        ).innerHTML = `<a href="notifications.html" id="notificationBadge"></a><a href="notifications.html" class="me-3 position-relative inline-block">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+  </svg>
+</a>
+<a href="chat.html"  id="messageBadge"><a href="chat.html" class="me-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+      </svg>
+      </a>
+      <a    class="cursor-pointer me-4" ${
+        localStorage.getItem("type") == "customer"
+          ? `href="customer/customerDashboard.html"`
+          : `href="service-provider/spDashboard.html"`
+      }
+      }><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-7">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9M15 17V5M21 17V12" />
+      </svg>
+       </a>
+      <button type="button" id="logoutBtn"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Logout
+      </button>`;
+      }
+
+      if (localStorage.getItem("token") == null) {
+        document.getElementById("userLoggedIn").innerHTML = `
+      <a href="index.html"
+        class="text-gray-800 light:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800 me-2">
+        Login
+      </a>
+      <a href="register.html"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Sign up
+      </a>`;
+      }
+    </script>
+    <!-- JavaScript -->
+    <script>
+      if (localStorage.getItem("token") != null) {
+        const backendURL = "http://gazellian.test";
+
+        const BOOK_CACHE_NAME = "booking-cache";
+        const CUSTOMERBOOKING_URL = backendURL + "/api/booking/customer/index";
+        const SPBOOKING_URL = backendURL + "/api/booking/provider/index";
+
+        const apiUrl =
+          localStorage.getItem("type") === "customer"
+            ? CUSTOMERBOOKING_URL
+            : SPBOOKING_URL;
+
+        // Function to fetch and cache booking data
+        async function fetchBooking() {
+          try {
+            const cache = await caches.open(BOOK_CACHE_NAME);
+
+            const response = await fetch(apiUrl, {
+              headers: {
+                Accept: "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const bookingData = await response.json();
+            await cache.put(apiUrl, new Response(JSON.stringify(bookingData)));
+          } catch (error) {
+            console.error("Error fetching booking data:", error);
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+          const serviceContainer = document.getElementById("service_container");
+          const serviceOptions = document.getElementById("servicesOptions");
+
+          const CACHE_NAME = "service-provider-cache";
+          const SERVICE_PROVIDER_URL = backendURL + "/api/service-provider";
+
+          const cache = await caches.open(CACHE_NAME);
+          const cachedSP = await cache.match(SERVICE_PROVIDER_URL);
+          if (!cachedSP) return;
+
+          window.spDatas = await cachedSP.json();
+        });
+
+        function openBookingModal(id) {
+          const serviceOptions = document.getElementById("servicesOptions");
+          serviceOptions.innerHTML =
+            '<option value="">Select a service</option>';
+
+          const sp = window.spDatas.find((sp) => sp.id == id);
+
+          if (!sp) return;
+
+          sp.services.forEach((service) => {
+            const option = document.createElement("option");
+            option.value = service.id;
+            option.textContent = service.service_name;
+            serviceOptions.appendChild(option);
+          });
+
+          document.getElementById("bookingModal").classList.remove("hidden");
+
+          const booking_form = document.getElementById("booking_form");
+          const confirmationModal =
+            document.getElementById("confirmationModal");
+
+          booking_form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(booking_form);
+            booking_form.querySelector("button").innerText = `Booking...`;
+
+            booking_form.querySelectorAll("button").disabled = true;
+
+            const bookingData = {
+              provider_id: id,
+              customer_id: 1,
+              event_id: formData.get("event_id"),
+              service_id: formData.get("service_id"),
+              booking_date: formData.get("event_date"),
+              requested_amount: formData.get("requested_amount"),
+              note: formData.get("note"),
+            };
+
+            const bookingResponse = await fetch(backendURL + "/api/booking", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+              body: JSON.stringify(bookingData),
+            });
+
+            // throw error
+            if (!bookingResponse.ok)
+              throw new Error(await bookingResponse.text());
+
+            booking_form.reset();
+
+            booking_form.querySelector("button").innerText = `Book Now`;
+            booking_form.querySelectorAll("button").disabled = false;
+            closeBookingModal();
+            await fetchBooking();
+          };
+
+          function closeBookingModal() {
+            document.getElementById("bookingModal").classList.add("hidden");
+            confirmationModal.classList.remove("hidden");
+
+            setTimeout(() => {
+              confirmationModal.classList.add("hidden");
+            }, 2000);
+          }
+        }
+
+        function closeBookingModal() {
+          document.getElementById("bookingModal").classList.add("hidden");
+        }
+      }
+    </script>
+  </body>
+</html>

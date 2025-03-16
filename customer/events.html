@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.1/dist/flowbite.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"
+      defer
+    ></script>
+    <script type="module" src="/src/js/system/events.js"></script>
+    <title>My Events</title>
+  </head>
+  <body>
+    <div
+      class="fixed inset-0 flex justify-center items-center bg-white z-50 hidden"
+      id="loader"
+    >
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- cancel confirmation modal -->
+    <div
+      id="confirmationModal"
+      tabindex="-1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <div class="p-4 md:p-5 text-center">
+            <svg
+              class="mx-auto mb-4 text-gray-400 w-12 h-12 light:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3
+              class="mb-5 text-md font-normal text-gray-500 light:text-gray-400"
+            >
+              Are you sure you want to do this?
+            </h3>
+            <button
+              type="button"
+              class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 light:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-2 py-3 text-center"
+              id="cancelButton"
+            >
+              Yes, I'm sure
+            </button>
+            <button
+              type="button"
+              class="py-2.5 px-3 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 light:focus:ring-gray-700 light:bg-gray-800 light:text-gray-400 light:border-gray-600 light:hover:text-white light:hover:bg-gray-700 closeModal"
+            >
+              No, cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- update modal -->
+    <div
+      id="updateModal"
+      class="fixed hidden z-100 w-full h-full flex items-center justify-center"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="w-1/4 max-w-md p-6 bg-white rounded-xl">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-md font-bold text-gray-900">Update Event</h3>
+          <button
+            class="flex items-center justify-center px-2 h-6 text-xs rounded-full font-medium text-gray-700 hover:bg-gray-300 closeModal"
+          >
+            X
+          </button>
+        </div>
+        <div class="mt-2">
+          <form id="update_form">
+            <div>
+              <label
+                for=""
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event Name
+              </label>
+              <input
+                type="text"
+                id="event_name"
+                name="event_name"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <label
+                for=""
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event Type
+              </label>
+              <input
+                type="text"
+                id="event_type"
+                name="event_type"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <!-- event date input -->
+              <label
+                for="eventDate"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event Date
+              </label>
+              <input
+                type="date"
+                id="event_date"
+                name="event_date"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <label
+                for=""
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Budget
+              </label>
+              <input
+                type="number"
+                id="event_budget"
+                name="budget"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter an amount"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full py-2 text-sm font-medium text-white rounded-lg customBg"
+              id="updateButton"
+            >
+              Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- create event modal -->
+    <div
+      id="createModal"
+      class="fixed hidden z-100 w-full h-full flex items-center justify-center"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="w-1/4 max-w-md p-6 bg-white rounded-xl">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-md font-bold text-gray-900">Create An Event</h3>
+          <button
+            class="flex items-center justify-center px-2 h-6 text-xs rounded-full font-medium text-gray-700 hover:bg-gray-300 closeModal"
+          >
+            X
+          </button>
+        </div>
+        <div class="mt-2">
+          <form id="create_form">
+            <div>
+              <label
+                for=""
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event Name
+              </label>
+              <input
+                type="text"
+                id="event_name"
+                name="event_name"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <label
+                for=""
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event Type
+              </label>
+              <input
+                type="text"
+                id="event_type"
+                name="event_type"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <!-- event date input -->
+              <label
+                for="eventDate"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Event Date
+              </label>
+              <input
+                type="date"
+                id="event_date"
+                name="event_date"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+              />
+              <label
+                for=""
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Budget
+              </label>
+              <input
+                type="number"
+                id="event_budget"
+                name="budget"
+                class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                placeholder="Enter an amount"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full py-2 text-sm font-medium text-white rounded-lg customBg"
+              id="createButton"
+            >
+              Create
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- delete confirmation modal -->
+    <div
+      id="deleteModal"
+      tabindex="-1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <div class="p-4 md:p-5 text-center">
+            <svg
+              class="mx-auto mb-4 text-gray-400 w-12 h-12 light:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3
+              class="mb-5 text-md font-normal text-gray-500 light:text-gray-400"
+            >
+              Are you sure you want to delete this?
+            </h3>
+            <button
+              type="button"
+              class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 light:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-2 py-3 text-center"
+              id="deleteButton"
+            >
+              Yes, I'm sure
+            </button>
+            <button
+              type="button"
+              class="py-2.5 px-3 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 light:focus:ring-gray-700 light:bg-gray-800 light:text-gray-400 light:border-gray-600 light:hover:text-white light:hover:bg-gray-700 closeModal"
+            >
+              No, cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- first navbar -->
+    <nav class="bg-white border-gray-200 light:bg-gray-900">
+      <div
+        class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4"
+      >
+        <a
+          href="/home.html"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img src="/src/imgs/G.png" class="h-10" alt="Gazellian Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap light:text-white"
+            >Gazellian</span
+          >
+        </a>
+        <div
+          class="flex items-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse"
+        >
+          <div class="flex justify-center items-center" id="userLoggedIn"></div>
+
+          <button
+            data-collapse-toggle="mega-menu"
+            type="button"
+            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 light:text-gray-400 light:hover:bg-gray-700 light:focus:ring-gray-600"
+            aria-controls="mega-menu"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open main menu</span>
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="mega-menu"
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse"
+          >
+            <li>
+              <a
+                href="/home.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-gray-500 md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="/aboutUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >About Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="/serviceProviders.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Service Providers</a
+              >
+            </li>
+            <li>
+              <a
+                href="/contactUs.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Contact Us</a
+              >
+            </li>
+            <li>
+              <a
+                href="/termsAndPrivacy.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Terms & Privacy</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- second navbar -->
+    <nav class="bg-white border-1 border-gray-200 light:bg-gray-900">
+      <div
+        class="flex flex-wrap items-center justify-center max-w-screen-xl mx-auto p-4"
+      >
+        <div
+          id="mega-menu"
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        >
+          <ul
+            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-24 rtl:space-x-reverse"
+          >
+            <li>
+              <a
+                href="customerDashboard.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-gray-500 md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                aria-current="page"
+                >Dashboard</a
+              >
+            </li>
+            <li>
+              <a
+                href="smartBudgeting.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Budget</a
+              >
+            </li>
+            <li>
+              <a
+                href="providerManager.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Manage Service Providers</a
+              >
+            </li>
+            <li>
+              <a
+                href="customerBooking.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Bookings</a
+              >
+            </li>
+            <li>
+              <a
+                href="events.html"
+                class="block py-2 px-3 customTextColor font-bold border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >My Events</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-6 bg-white rounded-lg mt-1">
+      <!-- Title and Sorting Dropdown -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="font-semibold">My Events</h2>
+        <div class="flex justify-end">
+          <select id="sortStatus" class="rounded-md border-0 text-sm me-3">
+            <option value="none">All Status</option>
+            <option value="Planning">Planning</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <button
+            type="button"
+            class="rounded-md px-2 me-2 focus:outline-none hover:bg-gray-100 createEvent"
+            style="cursor: pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Events Grid -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        id="event_container"
+      ></div>
+    </div>
+    <script>
+      if (localStorage.getItem("token") != null) {
+        document.getElementById(
+          "userLoggedIn"
+        ).innerHTML = `<a href="../notifications.html"  id="notificationBadge"></a><a href="../notifications.html" class="me-3 position-relative inline-block">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+  </svg>
+</a>
+        <a href="/chat.html"  id="messageBadge"><a href="/chat.html" class="me-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-7">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+      </svg>
+      </a>
+      <a    class="cursor-pointer me-4" ${
+        localStorage.getItem("type") == "customer"
+          ? `href="customerDashboard.html"`
+          : `href="serviceprovider/serviceProviderDashboard.html"`
+      }
+      }><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-7">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9M15 17V5M21 17V12" />
+      </svg>
+       </a>
+      <button
+      id="logoutBtn"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Logout
+      </button>`;
+      }
+
+      if (localStorage.getItem("token") == null) {
+        document.getElementById("userLoggedIn").innerHTML = `
+      <a href="index.html"
+        class="text-gray-800 light:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Login
+      </a>
+      <a href="register.html"
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        Sign up
+      </a>`;
+      }
+    </script>
+  </body>
+</html>

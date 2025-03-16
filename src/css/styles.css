@@ -1,0 +1,136 @@
+body {
+  font-family: "Montserrat", sans-serif !important;
+}
+
+/* Hide only the vertical scrollbar but keep scrolling functional */
+
+/* For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar:vertical {
+  width: 0px; /* Hide the vertical scrollbar */
+  height: 8px; /* Keep the horizontal scrollbar visible */
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: none; /* Hide vertical scrollbar */
+}
+
+/* For Edge & IE */
+body {
+  -ms-overflow-style: none; /* Hide vertical scrollbar */
+}
+
+/* Ensure scrolling is still possible */
+html,
+body {
+  overflow-y: none; /* Keep vertical scrolling */
+  overflow-x: auto; /* Keep horizontal scrolling */
+}
+
+.centerContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.customBg {
+  background-color: #9973ac;
+  transition: width 1s ease-in-out; /* Smooth transition effect */
+}
+
+.customTextColor {
+  color: #9973ac;
+}
+
+.customBorder {
+  border: 2px solid #9973ac;
+}
+
+.active-link {
+  color: #9973ac;
+  font-weight: bold;
+}
+
+.customBg:hover {
+  background-color: #7e5a90;
+}
+
+.fade-up {
+  /* position: relative; */
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.fade {
+  animation: fade 0.2s ease;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  animation: spinner-o824ag 1s infinite linear;
+}
+
+.spinner div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #9973ac;
+  border-radius: 50%;
+  animation: spinner-vse6n7 1.25s infinite ease;
+}
+
+.spinner div:nth-child(1) {
+  --rotation: 90;
+}
+
+.spinner div:nth-child(2) {
+  --rotation: 180;
+}
+
+.spinner div:nth-child(3) {
+  --rotation: 270;
+}
+
+.spinner div:nth-child(4) {
+  --rotation: 360;
+}
+
+@keyframes spinner-vse6n7 {
+  0%,
+  100% {
+    transform: rotate(calc(var(--rotation) * 1deg)) translateY(0);
+  }
+
+  50% {
+    transform: rotate(calc(var(--rotation) * 1deg)) translateY(300%);
+  }
+}
+
+@keyframes spinner-o824ag {
+  to {
+    transform: rotate(360deg);
+  }
+}
