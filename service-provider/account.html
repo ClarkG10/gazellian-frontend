@@ -18,6 +18,7 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"
       defer
     ></script>
+    <script type="module" src="/src/js/system/spAccount.js"></script>
     <title>Dashboard</title>
   </head>
   <body>
@@ -71,7 +72,7 @@
           class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
         >
           <ul
-            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse"
+            class="flex flex-col mt-4 md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse"
           >
             <li>
               <a
@@ -123,7 +124,7 @@
           class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
         >
           <ul
-            class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-24 rtl:space-x-reverse"
+            class="flex flex-col mt-4 md:flex-row md:mt-0 md:space-x-24 rtl:space-x-reverse"
           >
             <li>
               <a
@@ -172,149 +173,393 @@
         </div>
       </div>
     </nav>
+    <div
+      class="fixed inset-0 flex justify-center items-center bg-white z-50 hidden"
+      id="loader"
+    >
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <!-- content -->
-    <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div class="max-w-5xl mx-auto p-6 bg-white rounded-lg">
       <!-- Page Title -->
-      <h2 class="text-3xl font-semibold text-gray-900 mb-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-6">
         Profile & Account Settings
       </h2>
 
       <!-- Business Details Section -->
-      <div class="bg-gray-100 p-6 rounded-lg shadow-sm mb-6">
-        <h3 class="text-xl font-semibold mb-4">Update Business Details</h3>
+      <div class="p-6 rounded-lg shadow-md border border-gray-300 mb-6">
+        <h3 class="text-md font-semibold mb-4">Update Business Details</h3>
+        <form id="update_info_form">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-2 text-sm text-gray-900"
+                >Business Name</label
+              >
+              <input
+                type="text"
+                id="businessName"
+                name="business_name"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter Business Name"
+                required
+              />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm text-gray-900"
+                >Business Email</label
+              >
+              <input
+                type="email"
+                id="businessEmail"
+                name="email"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter Business Email"
+                required
+              />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm text-gray-900"
+                >Business Phone</label
+              >
+              <input
+                type="text"
+                id="businessPhone"
+                name="phone_number"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter Phone Number"
+                required
+              />
+            </div>
+            <div>
+              <label class="block mb-2 text-sm text-gray-900"
+                >Years in business</label
+              >
+              <input
+                type="text"
+                id="yearsInBusiness"
+                name="years_in_business"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter Years in Business"
+                required
+              />
+            </div>
+          </div>
+          <div class="mt-4">
+            <label class="block mt-2 text-sm text-gray-900"
+              >Website URL (optional)</label
+            >
+            <input
+              type="text"
+              id="websiteURL"
+              name="website_url"
+              class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter Website Link"
+            />
+          </div>
+          <div class="mt-4">
+            <label class="block mt-2 text-sm text-gray-900">Location</label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter Location of your business"
+            />
+          </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >Business Name</label
-            >
-            <input
-              type="text"
-              id="businessName"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter Business Name"
-            />
-          </div>
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >Business Email</label
-            >
-            <input
-              type="email"
-              id="businessEmail"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter Business Email"
-            />
-          </div>
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >Business Phone</label
-            >
-            <input
-              type="text"
-              id="businessPhone"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter Phone Number"
-            />
-          </div>
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >Location</label
-            >
-            <input
-              type="text"
-              id="businessLocation"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter Location"
-            />
-          </div>
-        </div>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                for="businessType"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Select Your Business Type(s)
+                <p class="text-xs text-gray-500 mb-2">
+                  Hold <strong>CTRL</strong> (Windows) or
+                  <strong>Command ⌘</strong> (Mac) to select multiple options.
+                </p>
+              </label>
 
-        <button
-          class="mt-4 bg-blue-600 text-white px-5 py-2 rounded-md shadow-md hover:bg-blue-700"
-        >
-          Save Changes
-        </button>
+              <select
+                id="businessType"
+                name="business_type[]"
+                multiple
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500"
+                required
+                size="5"
+              >
+                <option class="p-2" value=" Event Planning & Coordination">
+                  Event Planning & Coordination
+                </option>
+                <option class="p-2" value="Wedding Planning">
+                  Wedding Planning
+                </option>
+                <option class="p-2" value="Corporate Event Management">
+                  Corporate Event Management
+                </option>
+                <option class="p-2" value="Concert & Festival Organizers">
+                  Concert & Festival Organizers
+                </option>
+                <option class="p-2" value="Party & Social Event Planning">
+                  Party & Social Event Planning
+                </option>
+
+                <option class="p-2" value="Catering Services">
+                  Catering Services
+                </option>
+                <option class="p-2" value="Food Trucks & Mobile Catering">
+                  Food Trucks & Mobile Catering
+                </option>
+                <option class="p-2" value="Food Trucks & Mobile Catering">
+                  Food Trucks & Mobile Catering
+                </option>
+
+                <option class="p-2" value="Event Photography">
+                  Event Photography
+                </option>
+                <option class="p-2" value="Event Videography">
+                  Event Videography
+                </option>
+                <option class="p-2" value="Photo Booth Rental">
+                  Photo Booth Rental
+                </option>
+
+                <option class="p-2" value="Venue Rental">Venue Rental</option>
+                <option class="p-2" value="Tent & Canopy Rentals">
+                  Tent & Canopy Rentals
+                </option>
+
+                <option class="p-2" value="Event Decoration Services">
+                  Event Decoration Services
+                </option>
+                <option class="p-2" value="Florist & Floral Arrangements">
+                  Florist & Floral Arrangements
+                </option>
+
+                <option class="p-2" value="Live Band & Musicians">
+                  Live Band & Musicians
+                </option>
+                <option class="p-2" value="DJ & Sound System Services">
+                  DJ & Sound System Services
+                </option>
+
+                <option class="p-2" value="Makeup & Beauty Services">
+                  Makeup & Beauty Services
+                </option>
+                <option class="p-2" value="Formal Wear & Suit Rentals">
+                  Formal Wear & Suit Rentals
+                </option>
+
+                <option class="p-2" value="Custom Invitations & Printing">
+                  Custom Invitations & Printing
+                </option>
+                <option class="p-2" value="Event Branding & Signage">
+                  Event Branding & Signage
+                </option>
+
+                <option class="p-2" value="Luxury Car & Limo Rentals">
+                  Luxury Car & Limo Rentals
+                </option>
+                <option class="p-2" value="Guest Shuttle & Transportation">
+                  Guest Shuttle & Transportation
+                </option>
+
+                <option class="p-2" value="Event Security Services">
+                  Event Security Services
+                </option>
+                <option class="p-2" value="First Aid & Medical Services">
+                  First Aid & Medical Services
+                </option>
+
+                <option class="p-2" value="Virtual Event Hosting & Webinars">
+                  Virtual Event Hosting & Webinars
+                </option>
+
+                <option class="p-2" value="custom services">
+                  Other Custom Services
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-2 text-sm text-gray-900"
+                >Description</label
+              >
+              <textarea
+                type="text"
+                id="description"
+                name="description"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                rows="8"
+                placeholder="Enter Description"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button
+              class="mt-4 text-sm bg-blue-600 text-white px-3 py-2 rounded-md shadow-md hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
 
       <!-- Change Password Section -->
-      <div class="bg-gray-100 p-6 rounded-lg shadow-sm mb-6">
-        <h3 class="text-xl font-semibold mb-4">Change Password</h3>
+      <div class="p-6 rounded-lg shadow-md border border-gray-300 mb-6">
+        <h3 class="text-md font-semibold mb-4">Change Password</h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >Current Password</label
-            >
+        <div>
+          <label class="block mb-2 text-sm text-gray-900"
+            >Current Password</label
+          >
+          <div class="relative">
             <input
               type="password"
               id="currentPassword"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              name="currentPassword"
+              class="w-full border border-gray-300 mb-4 rounded-lg focus:ring-blue-500 focus:border-blue-500 pr-10"
               placeholder="Enter Current Password"
+              required
             />
-          </div>
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >New Password</label
+            <span
+              class="absolute inset-y-0 right-3 bottom-3 flex items-center cursor-pointer text-gray-500"
+              onclick="togglePassword('currentPassword', this)"
             >
-            <input
-              type="password"
-              id="newPassword"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter New Password"
-            />
-          </div>
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900"
-              >Confirm New Password</label
-            >
-            <input
-              type="password"
-              id="confirmNewPassword"
-              class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Confirm New Password"
-            />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                />
+              </svg>
+            </span>
           </div>
         </div>
 
-        <button
-          class="mt-4 bg-red-600 text-white px-5 py-2 rounded-md shadow-md hover:bg-red-700"
-        >
-          Update Password
-        </button>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-2 text-sm text-gray-900">New Password</label>
+            <div class="relative">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 pr-10"
+                placeholder="Enter New Password"
+                required
+              />
+              <span
+                class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500"
+                onclick="togglePassword('password', this)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+          <div>
+            <label class="block mb-2 text-sm text-gray-900"
+              >Confirm New Password</label
+            >
+            <div class="relative">
+              <input
+                type="password"
+                id="confirmNewPassword"
+                name="password_confirmation"
+                class="w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 pr-10"
+                placeholder="Confirm New Password"
+                required
+              />
+              <span
+                class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500"
+                onclick="togglePassword('confirmNewPassword', this)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button
+            class="mt-4 text-sm bg-red-600 text-white px-3 py-2 rounded-md shadow-md hover:bg-red-700"
+          >
+            Update Password
+          </button>
+        </div>
       </div>
     </div>
 
     <script>
-      function previewLogo(event) {
-        let reader = new FileReader();
-        reader.onload = function () {
-          document.getElementById("logoPreview").src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-      }
-
-      function previewImages(event) {
-        let gallery = document.getElementById("gallery");
-        gallery.innerHTML = ""; // Clear gallery before adding new images
-
-        Array.from(event.target.files).forEach((file) => {
-          let reader = new FileReader();
-          reader.onload = function () {
-            let imgElement = document.createElement("img");
-            imgElement.src = reader.result;
-            imgElement.classList.add(
-              "w-full",
-              "h-32",
-              "object-cover",
-              "rounded-lg",
-              "border",
-              "border-gray-300"
-            );
-            gallery.appendChild(imgElement);
-          };
-          reader.readAsDataURL(file);
-        });
+      function togglePassword(fieldId, icon) {
+        const passwordField = document.getElementById(fieldId);
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+</svg>
+`;
+        } else {
+          passwordField.type = "password";
+          icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+</svg>`;
+        }
       }
     </script>
 
@@ -343,7 +588,8 @@
       </svg>
        </a>
       <button
-        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300  rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800"
+        id="logoutBtn">
         Logout
       </button>`;
       }
@@ -351,11 +597,11 @@
       if (localStorage.getItem("token") == null) {
         document.getElementById("userLoggedIn").innerHTML = `
       <a href="index.html"
-        class="text-gray-800 light:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        class="text-gray-800 light:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300  rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
         Login
       </a>
       <a href="register.html"
-        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300  rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
         Sign up
       </a>`;
       }

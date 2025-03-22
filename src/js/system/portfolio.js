@@ -287,13 +287,15 @@ for (let i = 0; i < reviewData.length; i++) {
     }
   }
 
+  const service = serviceData.find((s) => s.id === reviewData[i].service_id);
+
   reviewHTML += `<div
   class="review-card bg-white shadow-sm rounded-lg p-6 fade-up"
 >
   <div>
     <div class="flex items-center">
      <img
-    src="${backendURL}/storage/${spData.user.profile_picture}"
+    src="${backendURL}/storage/${reviewData[i].profile.profile_picture}"
     class="w-9 h-9 rounded-full me-3"
   />
       <h3 class="text-md font-semibold text-gray-900">${
@@ -304,7 +306,7 @@ for (let i = 0; i < reviewData.length; i++) {
       <span class="text-xs text-yellow-500">${ratingHTML}</span>
       <span class="text-xs text-gray-500 ml-2">Rated ${
         reviewData[i].rating
-      }/5</span>
+      }/5  (${service.service_name})</span>
     </div>
     <p class="text-sm text-gray-700 italic mt-2">
       "${reviewData[i].review_text}" 

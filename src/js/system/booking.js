@@ -1,5 +1,14 @@
 import { backendURL, createToast, userId } from "../utils/utils.js";
 
+const tableBody = document.getElementById("bookingsTable");
+const confirmationModal = document.getElementById("confirmationModal");
+const declineConfirmationModal = document.getElementById(
+  "declineConfirmationModal"
+);
+const acceptConfirmationModal = document.getElementById(
+  "acceptConfirmationModal"
+);
+
 const CACHE_NAME = "booking-cache";
 const CUSTOMERBOOKING_URL = backendURL + "/api/booking/customer/index";
 const SPBOOKING_URL = backendURL + "/api/booking/provider/index";
@@ -69,9 +78,6 @@ async function getBookingHTML() {
   renderTable();
 }
 
-const tableBody = document.getElementById("bookingsTable");
-const confirmationModal = document.getElementById("confirmationModal");
-
 function renderTable() {
   tableBody.innerHTML = "";
 
@@ -80,13 +86,13 @@ function renderTable() {
   const paginatedBookings = filteredBookings.slice(start, end);
 
   paginatedBookings.forEach((booking) => {
-    const row = `<tr class="bg-white border-b">
+    const row = `<tr class="bg-white border-b border-gray-300">
       <td class="px-6 py-4 font-medium text-gray-900">${
         booking.event.event_name
       }</td>
       <td class="px-6 py-4">${booking.booking_date}</td>
       <td class="px-6 py-4">${booking.services.service_name}</td>
-      <td class="px-6 py-4">₱${booking.requested_amount}</td>
+      <td class="px-6 py-4">₱${booking.requested_amount.toLocaleString()}</td>
       <td class="px-6 py-4">${booking.created_at.split("T")[0]}</td>
       <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs ${
         booking.status === "accepted"
@@ -102,14 +108,22 @@ function renderTable() {
           ? "bg-yellow-500 text-white"
           : "bg-red-500 text-white"
       }" style="width: fit-content">${booking.payment_status}</span></td>
-      <td class="px-6 py-7 flex space-x-2">
+      <td class="py-6 px-6 flex space-x-2">
   ${
-    booking.status === "accepted"
-      ? `<button class="text-blue-600 text-sm font-medium hover:underline">Pay</button>
-         <button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}">Cancel</button>`
-      : booking.status === "pending"
-      ? `<button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}">Cancel</button>`
-      : ``
+    booking.status === "accepted" && localStorage.getItem("type") === "customer"
+      ? `<button class="text-blue-600 text-sm font-medium hover:underline payBooking" data-status="Paid">Pay</button>
+         <button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}" data-status="cancelled">Cancel</button>`
+      : booking.status === "pending" &&
+        localStorage.getItem("type") === "customer"
+      ? `<button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}" data-status="cancelled">Cancel</button>`
+      : booking.status === "pending" &&
+        localStorage.getItem("type") === "service provider"
+      ? `<button class="text-blue-600 text-sm font-medium hover:underline acceptBooking" data-id="${booking.id}" data-status="accepted">Accept</button>
+         <button class="text-red-600 text-sm font-medium hover:underline declineBooking" data-id="${booking.id}" data-status="declined">Decline</button>`
+      : booking.status === "accepted" &&
+        localStorage.getItem("type") === "service provider"
+      ? `<button class="text-red-600 text-sm font-medium hover:underline declineBooking" data-id="${booking.id}" data-status="declined">Decline</button>`
+      : `<small>no action.</small>`
   }
 </td>
 
@@ -120,8 +134,8 @@ function renderTable() {
   if (filteredBookings.length === 0) {
     tableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 text-center">No bookings found</td></tr>`;
   }
-
-  document.getElementById("startEntry").textContent = start + 1;
+  document.getElementById("startEntry").textContent =
+    filteredBookings.length === 0 ? start : start + 1;
   document.getElementById("endEntry").textContent = Math.min(
     end,
     filteredBookings.length
@@ -218,72 +232,159 @@ document.getElementById("sortPayment").addEventListener("change", function () {
 // Load data on page load
 loadCachedBooking();
 
-// SSE (Server-Sent Events) for live updates
-const eventSource = new EventSource(backendURL + "/api/booking/stream", {
-  withCredentials: true,
-});
+if (localStorage.getItem("type") === "service provider") {
+  // SSE (Server-Sent Events) for live updates
+  const eventSource = new EventSource(backendURL + "/api/booking/stream", {
+    withCredentials: true,
+  });
 
-let previousLength = 0;
+  let previousLength = 0;
 
-eventSource.onmessage = async (event) => {
-  const updatedData = JSON.parse(event.data);
-  const updatedLength = Array.isArray(updatedData) ? updatedData.length : 1;
+  eventSource.onmessage = async (event) => {
+    const updatedData = JSON.parse(event.data);
+    const updatedLength = Array.isArray(updatedData) ? updatedData.length : 1;
 
-  if (updatedLength > previousLength && previousLength === 0) {
-    previousLength = updatedLength;
-    return;
-  }
+    // if (updatedLength > previousLength && previousLength === 0) {
+    //   previousLength = updatedLength;
+    //   return;
+    // }
 
-  if (previousLength === 0) {
-    previousLength = updatedLength;
-    return;
-  }
-
-  if (
-    Array.isArray(updatedData) &&
-    updatedData.some(
-      (data) => data.provider_id === userId && data.status === "pending"
-    )
-  ) {
-    if (updatedLength !== previousLength) {
-      await fetchBooking();
-      if (updatedLength > previousLength) {
-        createToast("New booking received", "booking");
-      }
+    if (previousLength === 0) {
       previousLength = updatedLength;
+      return;
     }
-  }
-};
 
-eventSource.onerror = (error) => {
-  console.error("SSE error:", error);
-  eventSource.close();
-  window.reload();
-};
-
-tableBody.addEventListener("click", (e) => {
-  if (e.target.classList.contains("cancelBooking")) {
-    const bookingId = parseInt(e.target.dataset.id);
-
-    document.getElementById("confirmationModal").classList.remove("hidden");
-    document.getElementById("cancelButton").dataset.id = bookingId;
-  }
-});
-
-confirmationModal.addEventListener("click", (e) => {
-  if (e.target.classList.contains("closeModal")) {
-    confirmationModal.classList.add("hidden");
-  }
-});
-
-document.getElementById("cancelButton").addEventListener("click", async (e) => {
-  e.preventDefault();
-  const bookingId = parseInt(
-    document.getElementById("cancelButton").dataset.id
-  );
-  const data = {
-    status: "cancelled",
+    if (
+      Array.isArray(updatedData) &&
+      updatedData.some(
+        (data) =>
+          parseInt(data.provider_id) === parseInt(userId) &&
+          data.status === "pending"
+      )
+    ) {
+      if (updatedLength !== previousLength) {
+        await fetchBooking();
+        if (updatedLength > previousLength) {
+          createToast("New booking received", "booking");
+        }
+        previousLength = updatedLength;
+      }
+    }
   };
+
+  eventSource.onerror = (error) => {
+    console.error("SSE error:", error);
+    eventSource.close();
+    window.reload();
+  };
+
+  declineConfirmationModal.addEventListener("click", (e) => {
+    if (e.target.classList.contains("closeModal")) {
+      declineConfirmationModal.classList.add("hidden");
+    }
+  });
+
+  acceptConfirmationModal.addEventListener("click", (e) => {
+    if (e.target.classList.contains("closeModal")) {
+      acceptConfirmationModal.classList.add("hidden");
+    }
+  });
+
+  document
+    .getElementById("declineButton")
+    .addEventListener("click", async (e) => {
+      e.preventDefault();
+      const bookingId = parseInt(
+        document.getElementById("declineButton").dataset.id
+      );
+      const bookingStatus =
+        document.getElementById("declineButton").dataset.status;
+      const data = {
+        status: bookingStatus,
+      };
+      await updateBookingStatus(bookingId, data);
+    });
+
+  document
+    .getElementById("acceptButton")
+    .addEventListener("click", async (e) => {
+      e.preventDefault();
+      const bookingId = parseInt(
+        document.getElementById("acceptButton").dataset.id
+      );
+      const bookingStatus =
+        document.getElementById("acceptButton").dataset.status;
+
+      const data = {
+        status: bookingStatus,
+        payment_status: "pending",
+      };
+      await updateBookingStatus(bookingId, data);
+    });
+
+  tableBody.addEventListener("click", (e) => {
+    if (e.target.classList.contains("declineBooking")) {
+      const bookingId = parseInt(e.target.dataset.id);
+      const bookingStatus = e.target.dataset.status;
+
+      document
+        .getElementById("declineConfirmationModal")
+        .classList.remove("hidden");
+      document.getElementById("declineButton").dataset.id = bookingId;
+      document.getElementById("declineButton").dataset.status = bookingStatus;
+    }
+  });
+
+  tableBody.addEventListener("click", (e) => {
+    console.log("naclick??");
+
+    if (e.target.classList.contains("acceptBooking")) {
+      const bookingId = parseInt(e.target.dataset.id);
+      const bookingStatus = e.target.dataset.status;
+
+      document
+        .getElementById("acceptConfirmationModal")
+        .classList.remove("hidden");
+      document.getElementById("acceptButton").dataset.id = bookingId;
+      document.getElementById("acceptButton").dataset.status = bookingStatus;
+    }
+  });
+} else {
+  confirmationModal.addEventListener("click", (e) => {
+    if (e.target.classList.contains("closeModal")) {
+      confirmationModal.classList.add("hidden");
+    }
+  });
+
+  document
+    .getElementById("cancelButton")
+    .addEventListener("click", async (e) => {
+      e.preventDefault();
+      const bookingId = parseInt(
+        document.getElementById("cancelButton").dataset.id
+      );
+      const bookingStatus =
+        document.getElementById("cancelButton").dataset.status;
+
+      const data = {
+        status: bookingStatus,
+      };
+
+      await updateBookingStatus(bookingId, data);
+    });
+  tableBody.addEventListener("click", (e) => {
+    if (e.target.classList.contains("cancelBooking")) {
+      const bookingId = parseInt(e.target.dataset.id);
+      const bookingStatus = e.target.dataset.status;
+
+      document.getElementById("confirmationModal").classList.remove("hidden");
+      document.getElementById("cancelButton").dataset.id = bookingId;
+      document.getElementById("cancelButton").dataset.status = bookingStatus;
+    }
+  });
+}
+
+async function updateBookingStatus(bookingId, data) {
   const request = await fetch(backendURL + "/api/booking/status/" + bookingId, {
     method: "PUT",
     headers: {
@@ -298,6 +399,14 @@ document.getElementById("cancelButton").addEventListener("click", async (e) => {
     throw new Error(await request.text());
   }
 
-  confirmationModal.classList.add("hidden");
+  if (data.status === "cancelled") {
+    confirmationModal.classList.add("hidden");
+  } else if (data.status === "accepted") {
+    acceptConfirmationModal.classList.add("hidden");
+  } else {
+    declineConfirmationModal.classList.add("hidden");
+  }
   fetchBooking();
-});
+}
+
+async function updatePaymentStatus() {}

@@ -322,7 +322,7 @@ categoryForm.onsubmit = async (e) => {
     actual_spent: parseFloat(formData.get("actual_spent")),
   };
 
-  const request = await fetch(backendURL + "/api/budget-allocation", {
+  const response = await fetch(backendURL + "/api/budget-allocation", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -333,8 +333,8 @@ categoryForm.onsubmit = async (e) => {
   });
 
   // throw error
-  if (!request.ok) {
-    throw new Error(await request.text());
+  if (!response.ok) {
+    throw new Error(await response.text());
   }
   categoryForm.reset();
   categoryForm.querySelector("button").innerText = `Add`;
@@ -357,7 +357,7 @@ expenseForm.onsubmit = async (e) => {
     actual_spent: parseFloat(formData.get("actual_spent")),
   };
 
-  const request = await fetch(backendURL + "/api/event-expense", {
+  const response = await fetch(backendURL + "/api/event-expense", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -367,8 +367,8 @@ expenseForm.onsubmit = async (e) => {
     body: JSON.stringify(data),
   });
 
-  if (!request.ok) {
-    throw new Error(await request.text());
+  if (!response.ok) {
+    throw new Error(await response.text());
   }
   expenseForm.reset();
   expenseForm.querySelector("button").innerText = `Add`;
@@ -412,7 +412,7 @@ updateExpenseForm.addEventListener("submit", async (e) => {
 
   formData.append("_method", "PUT");
 
-  const request = await fetch(backendURL + "/api/event-expense/" + expenseId, {
+  const response = await fetch(backendURL + "/api/event-expense/" + expenseId, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -421,10 +421,10 @@ updateExpenseForm.addEventListener("submit", async (e) => {
     body: formData,
   });
 
-  if (!request.ok) {
+  if (!response.ok) {
     updateExpenseForm.querySelector("button").innerText = "Save Changes";
     updateExpenseForm.querySelector("button").disabled = false;
-    throw new Error(await request.text());
+    throw new Error(await response.text());
   }
 
   updateExpenseForm.reset();
@@ -464,7 +464,7 @@ document.getElementById("deleteButton").addEventListener("click", async (e) => {
     document.getElementById("deleteButton").dataset.id
   );
 
-  const request = await fetch(backendURL + "/api/event-expense/" + expenseId, {
+  const response = await fetch(backendURL + "/api/event-expense/" + expenseId, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
@@ -472,8 +472,8 @@ document.getElementById("deleteButton").addEventListener("click", async (e) => {
     },
   });
 
-  if (!request.ok) {
-    throw new Error(await request.text());
+  if (!response.ok) {
+    throw new Error(await response.text());
   }
 
   deleteConfirmationModal.classList.add("hidden");
@@ -493,7 +493,7 @@ updateBudgetForm.addEventListener("submit", async (e) => {
 
   console.log(eventId);
 
-  const request = await fetch(backendURL + "/api/event/" + eventId, {
+  const response = await fetch(backendURL + "/api/event/" + eventId, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -502,14 +502,14 @@ updateBudgetForm.addEventListener("submit", async (e) => {
     body: formData,
   });
 
-  const newData = await request.json();
+  const newData = await response.json();
 
   eventBudget.textContent = `₱${newData.budget}`;
 
-  if (!request.ok) {
+  if (!response.ok) {
     updateBudgetForm.querySelector("button").innerText = "Save Changes";
     updateBudgetForm.querySelector("button").disabled = false;
-    throw new Error(await request.text());
+    throw new Error(await response.text());
   }
 
   updateBudgetForm.reset();

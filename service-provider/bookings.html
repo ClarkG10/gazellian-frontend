@@ -18,6 +18,7 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"
       defer
     ></script>
+    <script type="module" src="/src/js/system/booking.js"></script>
     <title>Dashboard</title>
   </head>
   <body>
@@ -31,8 +32,7 @@
           class="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img src="/src/imgs/G.png" class="h-10" alt="Gazellian Logo" />
-          <span
-            class="self-center text-2xl font-semibold whitespace-nowrap light:text-white"
+          <span class="self-center text-2xl font-semibold light:text-white"
             >Gazellian</span
           >
         </a>
@@ -172,93 +172,213 @@
         </div>
       </div>
     </nav>
+    <div
+      class="fixed inset-0 flex justify-center items-center bg-white z-50 hidden"
+      id="loader"
+    >
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
     <!-- content -->
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <!-- Page Title -->
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-3xl font-semibold text-gray-900">Booking Requests</h2>
+    <div class="max-w-7xl mx-auto p-6 bg-white rounded-lg">
+      <!-- Title and Sorting Dropdowns -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">My Bookings</h2>
+        <div class="flex space-x-3">
+          <select id="sortEventName" class="border-0 rounded-md text-xs">
+            <option value="none">Sort by Event Name</option>
+            <option value="asc">A - Z</option>
+            <option value="desc">Z - A</option>
+          </select>
+          <select id="sortEventDate" class="border-0 rounded-md text-xs">
+            <option value="desc">Sort by Created Date</option>
+            <option value="asc">Oldest First</option>
+            <option value="desc">Newest First</option>
+          </select>
+          <select id="sortStatus" class="border-0 rounded-md text-xs">
+            <option value="none">Sort by Status</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="declined">Declined</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <select id="sortPayment" class="border-0 rounded-md text-xs">
+            <option value="none">Sort by Payment</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="not available">Not Available Yet</option>
+          </select>
+        </div>
       </div>
 
-      <!-- Filters -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <input
-          type="text"
-          id="searchBooking"
-          placeholder="Search bookings..."
-          class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-          oninput="filterBookings()"
-        />
-        <select
-          id="filterStatus"
-          class="w-full border border-gray-300 p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-          onchange="filterBookings()"
-        >
-          <option value="">Filter by Status</option>
-          <option value="pending">Pending</option>
-          <option value="accepted">Accepted</option>
-          <option value="declined">Declined</option>
-        </select>
-      </div>
-
-      <!-- Booking Requests Table -->
-      <div class="overflow-x-auto">
-        <table
-          class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm"
-        >
-          <thead class="bg-gray-100 text-gray-700 border-b">
+      <!-- Bookings Table -->
+      <div class="overflow-x-auto sm:rounded-lg">
+        <table class="w-full text-sm text-left text-gray-600">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-100">
             <tr>
-              <th class="py-4 px-6 text-left">Customer Name</th>
-              <th class="py-4 px-6 text-left">Service</th>
-              <th class="py-4 px-6 text-left">Event Date</th>
-              <th class="py-4 px-6 text-left">Status</th>
-              <th class="py-4 px-6 text-center">Actions</th>
+              <th class="px-6 py-3">Event Name</th>
+              <th class="px-6 py-3">Book Date</th>
+              <th class="px-6 py-3">Service</th>
+              <th class="px-6 py-3">Requested Amount</th>
+              <th class="px-6 py-3">Created At</th>
+              <th class="px-6 py-3">Status</th>
+              <th class="px-6 py-3">Payment</th>
+              <th class="px-6 py-3">Actions</th>
             </tr>
           </thead>
-          <tbody id="bookingTableBody">
-            <!-- Example Booking Request -->
-            <tr class="border-b hover:bg-gray-50">
-              <td class="py-4 px-6 font-medium text-gray-800">John Doe</td>
-              <td class="py-4 px-6">Wedding Photography</td>
-              <td class="py-4 px-6">April 15, 2024</td>
-              <td class="py-4 px-6">
-                <span
-                  class="px-3 py-1 bg-yellow-200 text-yellow-700 rounded-full text-xs font-semibold"
-                  >Pending</span
-                >
-              </td>
-              <td class="py-4 px-6 flex justify-center space-x-3">
-                <button
-                  class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 flex items-center gap-1"
-                  onclick="acceptBooking(this)"
-                >
-                  ✅ Accept
-                </button>
-                <button
-                  class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 flex items-center gap-1"
-                  onclick="declineBooking(this)"
-                >
-                  ❌ Decline
-                </button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="bookingsTable"></tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex flex-col items-center mt-4">
+        <div class="flex text-start">
+          <span class="text-xs text-gray-700">
+            Showing
+            <span id="startEntry" class="font-semibold text-gray-900"></span> to
+            <span id="endEntry" class="font-semibold text-gray-900"></span> of
+            <span id="totalEntries" class="font-semibold text-gray-900"></span>
+            Entries
+          </span>
+        </div>
+        <div class="inline-flex mt-2">
+          <button
+            id="prevPage"
+            class="flex items-center justify-center px-3 h-6 text-xs font-medium text-white customBg rounded-s me-2"
+          >
+            Prev
+          </button>
+          <button
+            id="nextPage"
+            class="flex items-center justify-center px-3 h-6 text-xs font-medium text-white customBg border-l border-gray-300 rounded-e"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
 
-    <script>
+    <!-- confirmation modal -->
+    <div
+      id="acceptConfirmationModal"
+      tabindex="1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <div class="p-4 md:p-5 text-center">
+            <svg
+              class="mx-auto mb-4 text-gray-400 w-12 h-12 light:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3
+              class="mb-5 text-md font-normal text-gray-500 light:text-gray-400"
+            >
+              Are you sure you want to accept this?
+            </h3>
+            <button
+              type="button"
+              class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 light:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-2 py-3 text-center"
+              id="acceptButton"
+            >
+              Yes, I'm sure
+            </button>
+            <button
+              type="button"
+              class="py-2.5 px-3 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 light:focus:ring-gray-700 light:bg-gray-800 light:text-gray-400 light:border-gray-600 light:hover:text-white light:hover:bg-gray-700 closeModal"
+            >
+              No, cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- confirmation modal -->
+    <div
+      id="declineConfirmationModal"
+      tabindex="1"
+      class="hidden fixed top-0 right-0 left-0 h-full flex justify-center w-full"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm light:bg-gray-700">
+          <div class="p-4 md:p-5 text-center">
+            <svg
+              class="mx-auto mb-4 text-gray-400 w-12 h-12 light:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3
+              class="mb-5 text-md font-normal text-gray-500 light:text-gray-400"
+            >
+              Are you sure you want to decline this?
+            </h3>
+            <button
+              type="button"
+              class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 light:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-2 py-3 text-center"
+              id="declineButton"
+            >
+              Yes, I'm sure
+            </button>
+            <button
+              type="button"
+              class="py-2.5 px-3 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 light:focus:ring-gray-700 light:bg-gray-800 light:text-gray-400 light:border-gray-600 light:hover:text-white light:hover:bg-gray-700 closeModal"
+            >
+              No, cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <script>
       function acceptBooking(button) {
         let row = button.closest("tr");
         row.children[3].innerHTML =
           '<span class="px-3 py-1 bg-green-200 text-green-700 rounded-full text-xs font-semibold">Accepted</span>';
-        row.children[4].innerHTML = ""; // Remove buttons after accepting
+        row.children[4].innerHTML = "";
       }
 
       function declineBooking(button) {
         let row = button.closest("tr");
         row.children[3].innerHTML =
           '<span class="px-3 py-1 bg-red-200 text-red-700 rounded-full text-xs font-semibold">Declined</span>';
-        row.children[4].innerHTML = ""; // Remove buttons after declining
+        row.children[4].innerHTML = "";
       }
 
       function filterBookings() {
@@ -278,7 +398,7 @@
           row.style.display = matchesSearch && matchesStatus ? "" : "none";
         });
       }
-    </script>
+    </script> -->
 
     <script>
       if (localStorage.getItem("token") != null) {
@@ -305,7 +425,8 @@
       </svg>
        </a>
       <button
-        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
+        class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800"
+        id="logoutBtn">
         Logout
       </button>`;
       }
