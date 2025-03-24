@@ -44,6 +44,7 @@
         <div class="mb-3">
           <label
             for="first_name"
+            id="fullname"
             class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
             >Full name</label
           >
@@ -79,6 +80,7 @@
           <div>
             <label
               for="phone"
+              id="phonenumber"
               class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
               >Phone number</label
             >
@@ -95,8 +97,9 @@
         <div class="mb-4">
           <label
             for="company"
+            id="profilepicture"
             class="block mb-2 text-sm font-medium text-gray-900"
-            >Profile Picture</label
+            >Profile picture</label
           >
           <input
             type="file"
@@ -110,6 +113,7 @@
         <div class="mb-4">
           <label
             for="email"
+            id="ownerEmail"
             class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
             >Email address</label
           >
@@ -186,5 +190,27 @@
         </div>
       </form>
     </div>
+    <script>
+      const selectedRole = document.getElementById("role");
+      selectedRole.addEventListener("change", function () {
+        const selectedValue = selectedRole.value;
+        const phoneInput = document.getElementById("phonenumber");
+        const profile_picture = document.getElementById("profilepicture");
+        const fullname = document.getElementById("fullname");
+        const email = document.getElementById("ownerEmail");
+
+        if (selectedValue === "service provider") {
+          phoneInput.innerText = "Business phone number";
+          profile_picture.innerText = "Business logo";
+          fullname.innerText = "Owner full name";
+          email.innerText = "Owner email address";
+        } else {
+          phoneInput.innerText = "Phone number";
+          profile_picture.innerText = "Profile picture";
+          fullname.innerText = "Full name";
+          email.innerText = "Email address";
+        }
+      });
+    </script>
   </body>
 </html>

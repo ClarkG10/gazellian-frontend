@@ -31,6 +31,13 @@ login_form.onsubmit = async (e) => {
     body: formData,
   });
 
+  // throw error
+  if (!loginResponse.ok) {
+    document.getElementById("loader").classList.add("hidden");
+    loginButton.disabled = false;
+    loginButton.innerHTML = `Login`;
+  }
+
   const json_login = await loginResponse.json();
 
   if (loginResponse.ok) {
@@ -42,8 +49,10 @@ login_form.onsubmit = async (e) => {
         Accept: "application/json",
       },
     });
+
     // throw error
     if (!response.ok) {
+      document.getElementById("loader").classList.add("hidden");
       throw new Error("Failed to fetch service providers");
     }
 

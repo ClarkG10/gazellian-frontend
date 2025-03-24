@@ -254,13 +254,29 @@ document.querySelector(".portfolios").classList.remove("hidden");
 for (let i = 0; i < portfolioData.length; i++) {
   let img = document.createElement("img");
   img.src = backendURL + "/storage/" + portfolioData[i].media_url;
-  img.className =
-    "w-full h-full object-cover rounded-lg shadow-sm customBorder";
+  img.className = "w-full h-full object-cover border border-gray-300 shadow-sm";
   img.alt = `Portfolio ${i + 1}`;
 
   // Assign large image style every 3rd image
   if (i % 3 === 0) {
     img.classList.add("col-span-2", "row-span-2");
+  }
+
+  // If more than 6 images, modify the 6th image
+  if (i === 5 && portfolioData.length > 6) {
+    let overlay = document.createElement("div");
+    overlay.className =
+      "absolute inset-0 bg-black opacity-50  flex items-center justify-center text-white text-2xl font-bold";
+    overlay.textContent = `+${portfolioData.length - 6}`;
+
+    let link = document.createElement("a");
+    link.href = "/view-all-portfolio.html"; // Change this to the correct route
+    link.className = "relative block w-full h-full";
+    link.appendChild(img);
+    link.appendChild(overlay);
+
+    portfolioContainer.appendChild(link);
+    break; // Stop rendering more images
   }
 
   portfolioContainer.appendChild(img);
