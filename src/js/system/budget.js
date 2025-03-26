@@ -63,7 +63,7 @@ async function fetchBudget(firstLoad = false, action = "") {
 
   if (firstLoad) {
     location.reload();
-  } else {
+  } else if (action !== "updateActualSpent") {
     loadCachedBudget(action);
   }
 }
@@ -100,7 +100,7 @@ async function loadCachedBudget(action) {
 
     if (cachedBudget) {
       budgetData = await cachedBudget.json();
-      if (action === "addCategory") {
+      if (action === "addCategory" || action === "updateActualSpent") {
         getAllocatedBudgetHTML(eventBudgetData, totalBudget);
         eventOptions.dispatchEvent(new Event("change"));
       } else {
@@ -126,11 +126,19 @@ if (cachedBudget) {
 function getEventsHTML() {
   let eventOptionsHTML = "";
 
-  for (let i = 0; i < eventData.length; i++) {
-    eventOptionsHTML += `<option ${i == 0 ? "selected" : ``} value="${
-      eventData[i].id
-    }">${eventData[i].event_name}</option>`;
+  const filterEvents = eventData.sort((a, b) => {
+    const order = { Ongoing: 1, Planning: 2, Completed: 3, Cancelled: 4 };
+    return order[a.status] - order[b.status];
+  });
+
+  for (let i = 0; i < filterEvents.length; i++) {
+    if (filterEvents[i].status !== "Cancelled") {
+      eventOptionsHTML += `<option ${i == 0 ? "selected" : ``} value="${
+        filterEvents[i].id
+      }">${filterEvents[i].event_name}</option>`;
+    }
   }
+
   eventOptions.innerHTML = eventOptionsHTML;
   eventOptions.dispatchEvent(new Event("change"));
   categoryOptions.dispatchEvent(new Event("change"));
@@ -156,7 +164,9 @@ async function getAllocatedBudgetHTML(data, budget) {
           data[i].category.category_name
         }</span>
         <div class="flex">
-          <span class="text-gray-700 text-sm me-3">₱${spent.toLocaleString()}<small class="customTextColor">${
+          <span class="text-gray-700 text-sm me-3">₱${data[
+            i
+          ].allocated_amount.toLocaleString()}<small class="customTextColor">${
       data[i].actual_spent != 0
         ? `(₱${data[i].actual_spent.toLocaleString()})`
         : ``
@@ -173,7 +183,7 @@ async function getAllocatedBudgetHTML(data, budget) {
       data[i].id
     }">${data[i].category.category_name}</option>`;
 
-    finalAllocatedBudget += parseFloat(spent);
+    finalAllocatedBudget += parseFloat(data[i].allocated_amount);
 
     // Wait for DOM update, then animate the width
     setTimeout(() => {
@@ -203,8 +213,12 @@ function getExpensesHTML(data) {
   let expensesHTML = "",
     totalExpense = 0,
     totalExpenseSpent = 0;
+  let budgetId = 0;
 
   for (let i = 0; i < data.expenses.length; i++) {
+    totalExpense += parseFloat(data.expenses[i]?.allocated_amount || 0);
+    totalExpenseSpent += parseFloat(data.expenses[i]?.actual_spent || 0);
+
     expensesHTML += `                  <tr
                     class="odd:bg-white odd:light:bg-gray-900 even:bg-gray-50 even:light:bg-gray-800 border-b light:border-gray-700 border-gray-200"
                   >
@@ -236,14 +250,17 @@ function getExpensesHTML(data) {
                       <button
                         type="button"
                         data-id="${data.expenses[i].id}"
+                        data-budget-id="${data.expenses[i].budget_id}"
+                        data-total-expense="${totalExpenseSpent}"
+                        data-expense="${data.expenses[i].actual_spent}"
                         class="ms-2 font-medium text-red-600 light:text-blue-500 hover:underline cursor-pointer deleteExpense"
                       >
                         Delete
                       </button>
                     </td>
                   </tr>`;
-    totalExpense += parseFloat(data.expenses[i]?.allocated_amount || 0);
-    totalExpenseSpent += parseFloat(data.expenses[i]?.actual_spent || 0);
+
+    budgetId = data.expenses[i].budget_id;
   }
 
   if (data.expenses.length === 0) {
@@ -258,6 +275,8 @@ function getExpensesHTML(data) {
   expensesTable.innerHTML = expensesHTML;
   totalAllocatedAmount.innerHTML = `₱${totalExpense.toLocaleString()}`;
   totalActualSpent.innerHTML = `₱${totalExpenseSpent.toLocaleString()}`;
+
+  updateBudgetAllocationActualSpent(budgetId, totalExpenseSpent);
 }
 
 // Filter allocated budget and category by event
@@ -295,6 +314,30 @@ categoryOptions.addEventListener("change", () => {
   selectedCategory.innerHTML = `${eventExpenseByCategory[0].category.category_name}`;
   getExpensesHTML(eventExpenseByCategory[0]);
 });
+
+async function updateBudgetAllocationActualSpent(budgetId, totalExpenseSpent) {
+  console.log(budgetId, totalExpenseSpent);
+  const response = await fetch(
+    backendURL + `/api/budget-allocation/${budgetId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        actual_spent: totalExpenseSpent,
+      }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Error updating budget allocation");
+  }
+  const updatedBudgetAllocation = await response.json();
+  console.log(updatedBudgetAllocation);
+  await fetchBudget("", "updateActualSpent");
+}
 
 getEventsHTML();
 loadCachedBudget();
@@ -373,7 +416,6 @@ expenseForm.onsubmit = async (e) => {
   expenseForm.reset();
   expenseForm.querySelector("button").innerText = `Add`;
 
-  createCategoryModal.classList.add("hidden");
   await fetchBudget("", "addExpense");
 };
 
@@ -443,12 +485,18 @@ updateExpenseModal.addEventListener("click", (e) => {
 // delete expense functionality
 expensesTable.addEventListener("click", (e) => {
   const expenseId = parseInt(e.target.dataset.id);
+  const budgetId = parseInt(e.target.dataset.budgetId);
+  const totalExpense = parseInt(e.target.dataset.totalExpense);
+  const actualSpent = parseInt(e.target.dataset.expense);
 
   if (e.target.classList.contains("deleteExpense")) {
-    console.log("delete expense", expenseId);
+    console.log("delete expense id:", expenseId);
 
     document.getElementById("deleteModal").classList.remove("hidden");
     document.getElementById("deleteButton").dataset.id = expenseId;
+    document.getElementById("deleteButton").dataset.budgetId = budgetId;
+    document.getElementById("deleteButton").dataset.totalExpense = totalExpense;
+    document.getElementById("deleteButton").dataset.actualSpent = actualSpent;
   }
 });
 
@@ -462,6 +510,15 @@ document.getElementById("deleteButton").addEventListener("click", async (e) => {
   e.preventDefault();
   const expenseId = parseInt(
     document.getElementById("deleteButton").dataset.id
+  );
+  const budgetId = parseInt(
+    document.getElementById("deleteButton").dataset.budgetId
+  );
+  const totalExpense = parseInt(
+    document.getElementById("deleteButton").dataset.totalExpense
+  );
+  const actualSpent = parseInt(
+    document.getElementById("deleteButton").dataset.actualSpent
   );
 
   const response = await fetch(backendURL + "/api/event-expense/" + expenseId, {
@@ -477,6 +534,15 @@ document.getElementById("deleteButton").addEventListener("click", async (e) => {
   }
 
   deleteConfirmationModal.classList.add("hidden");
+
+  console.log(totalExpense, actualSpent);
+
+  const finalExpense =
+    parseInt(totalExpense) === parseInt(actualSpent)
+      ? 0
+      : parseInt(totalExpense) - parseInt(actualSpent);
+
+  updateBudgetAllocationActualSpent(budgetId, finalExpense);
   await fetchBudget();
 });
 

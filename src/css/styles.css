@@ -2,29 +2,24 @@ body {
   font-family: "Montserrat", sans-serif !important;
 }
 
-/* Hide only the vertical scrollbar but keep scrolling functional */
-
-/* For WebKit browsers (Chrome, Safari) */
 ::-webkit-scrollbar:vertical {
-  width: 0px; /* Hide the vertical scrollbar */
-  height: 8px; /* Keep the horizontal scrollbar visible */
+  width: 0px;
+  height: 8px;
 }
 
 /* For Firefox */
 html {
-  scrollbar-width: none; /* Hide vertical scrollbar */
+  scrollbar-width: none;
 }
 
-/* For Edge & IE */
 body {
-  -ms-overflow-style: none; /* Hide vertical scrollbar */
+  -ms-overflow-style: none;
 }
 
-/* Ensure scrolling is still possible */
 html,
 body {
-  overflow-y: none; /* Keep vertical scrolling */
-  overflow-x: auto; /* Keep horizontal scrolling */
+  overflow-y: none;
+  overflow-x: auto;
 }
 
 .centerContainer {
@@ -36,7 +31,7 @@ body {
 
 .customBg {
   background-color: #9973ac;
-  transition: width 1s ease-in-out; /* Smooth transition effect */
+  transition: width 1s ease-in-out;
 }
 
 .customTextColor {

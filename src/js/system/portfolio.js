@@ -209,10 +209,11 @@ let serviceOptionsHTML = `<option value="">Select a service</option>`;
 document.querySelector(".services").classList.remove("hidden");
 
 for (let i = 0; i < serviceData.length; i++) {
-  const category = categoryDataCached.find(
-    (category) => category.id === serviceData[i].category_id
-  );
-  serviceHTML += `
+  if (serviceData[i].availability_status === "Available") {
+    const category = categoryDataCached.find(
+      (category) => category.id === serviceData[i].category_id
+    );
+    serviceHTML += `
       <div class="bg-white shadow-sm rounded-xl p-6 w-90 transition-all duration-300 hover:shadow-2xl hover:border-gray-600 fade-up">
         <h3 class="text-lg font-bold customTextColor flex items-center gap-2">
           <span class="customTextColor"><i class="fas fa-concierge-bell"></i></span> 
@@ -230,12 +231,13 @@ for (let i = 0; i < serviceData.length; i++) {
           PHP ${serviceData[
             i
           ].price_range_min.toLocaleString()} - PHP ${serviceData[
-    i
-  ].price_range_max.toLocaleString()}
+      i
+    ].price_range_max.toLocaleString()}
         </footer>
       </div>`;
 
-  serviceOptionsHTML += `<option value="${serviceData[i].id}">${serviceData[i].service_name}</option>`;
+    serviceOptionsHTML += `<option value="${serviceData[i].id}">${serviceData[i].service_name}</option>`;
+  }
 }
 
 serviceContainer.innerHTML = serviceHTML;
@@ -270,7 +272,7 @@ for (let i = 0; i < portfolioData.length; i++) {
     overlay.textContent = `+${portfolioData.length - 6}`;
 
     let link = document.createElement("a");
-    link.href = "/view-all-portfolio.html"; // Change this to the correct route
+    link.href = "/gallery.html?spId=" + spId; // Change this to the correct route
     link.className = "relative block w-full h-full";
     link.appendChild(img);
     link.appendChild(overlay);

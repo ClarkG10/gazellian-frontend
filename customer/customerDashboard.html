@@ -154,13 +154,7 @@
                 >Budget</a
               >
             </li>
-            <li>
-              <a
-                href="providerManager.html"
-                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
-                >Manage Service Providers</a
-              >
-            </li>
+
             <li>
               <a
                 href="customerBooking.html"
@@ -175,10 +169,18 @@
                 >My Events</a
               >
             </li>
+            <li>
+              <a
+                href="account.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Manage Account</a
+              >
+            </li>
           </ul>
         </div>
       </div>
     </nav>
+    <div id="pulseLoader"></div>
     <!-- Dashboard Container -->
     <div class="max-w-7xl mx-auto px-6 py-8">
       <h1 class="text-lg font-bold text-gray-900 mb-5">Dashboard</h1>
@@ -187,7 +189,7 @@
       <div
         class="bg-white border-gray-300 border shadow-sm rounded-lg p-6 mb-3"
       >
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+        <h2 class="text-md font-semibold text-gray-900 mb-4">
           Upcoming Events
         </h2>
         <ul class="space-y-4" id="upcoming-events-container"></ul>
@@ -199,7 +201,7 @@
           class="w-full md:w-1/2 bg-white border-gray-300 border shadow-sm rounded-lg p-6"
         >
           <h2
-            class="text-lg font-semibold text-gray-900 mb-4 flex justify-between"
+            class="text-md font-semibold text-gray-900 mb-4 flex justify-between"
           >
             Budget Tracker
             <select
@@ -215,7 +217,7 @@
         <div
           class="w-full md:w-1/2 bg-white border-gray-300 border shadow-sm rounded-lg p-6"
         >
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">
+          <h2 class="text-md font-semibold text-gray-900 mb-4">
             Notifications
           </h2>
           <ul class="space-y-3" id="notification-container"></ul>
@@ -227,7 +229,7 @@
         <!-- Active Bookings -->
         <div class="bg-white border-gray-300 border shadow-sm rounded-lg p-6">
           <h2
-            class="text-lg font-semibold text-gray-900 mb-4 flex justify-between"
+            class="text-md font-semibold text-gray-900 mb-4 flex justify-between"
           >
             Active Bookings
             <a

@@ -13,6 +13,11 @@ const CACHE_NAME = "booking-cache";
 const CUSTOMERBOOKING_URL = backendURL + "/api/booking/customer/index";
 const SPBOOKING_URL = backendURL + "/api/booking/provider/index";
 
+const SP_CACHE_NAME = "service-provider-cache";
+const SERVICE_PROVIDER_URL = backendURL + "/api/service-provider";
+
+let spDatas = "";
+
 const apiUrl =
   localStorage.getItem("type") === "customer"
     ? CUSTOMERBOOKING_URL
@@ -22,8 +27,16 @@ const apiUrl =
 async function fetchBooking(firstLoad = false) {
   try {
     const cache = await caches.open(CACHE_NAME);
+    const spcache = await caches.open(SP_CACHE_NAME);
 
     const response = await fetch(apiUrl, {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+
+    const spResponse = await fetch(SERVICE_PROVIDER_URL, {
       headers: {
         Accept: "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -34,8 +47,18 @@ async function fetchBooking(firstLoad = false) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
+    if (!spResponse.ok) {
+      throw new Error(`HTTP error! Status: ${spResponse.status}`);
+    }
+
     const bookingData = await response.json();
+    spDatas = await spResponse.json();
+
     await cache.put(apiUrl, new Response(JSON.stringify(bookingData)));
+    await spcache.put(
+      SERVICE_PROVIDER_URL,
+      new Response(JSON.stringify(spDatas))
+    );
 
     localStorage.setItem("bookingDataLoaded", "true");
 
@@ -84,6 +107,7 @@ function renderTable() {
   const start = (currentPage - 1) * rowsPerPage;
   const end = start + rowsPerPage;
   const paginatedBookings = filteredBookings.slice(start, end);
+  const userType = localStorage.getItem("type");
 
   paginatedBookings.forEach((booking) => {
     const row = `<tr class="bg-white border-b border-gray-300">
@@ -93,7 +117,16 @@ function renderTable() {
       <td class="px-6 py-4">${booking.booking_date}</td>
       <td class="px-6 py-4">${booking.services.service_name}</td>
       <td class="px-6 py-4">₱${booking.requested_amount.toLocaleString()}</td>
-      <td class="px-6 py-4">${booking.created_at.split("T")[0]}</td>
+     ${
+       userType === "customer"
+         ? `<td class="px-6 py-4">${
+             booking.note === null ? "None" : booking.note
+           }</td>`
+         : ` <td class="px-6 py-4">${booking.created_at.split("T")[0]}</td>
+      <td class="px-6 py-4">${
+        booking.note === null ? "None" : booking.note
+      }</td>`
+     }
       <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs ${
         booking.status === "accepted"
           ? "bg-green-500 text-white"
@@ -108,20 +141,25 @@ function renderTable() {
           ? "bg-yellow-500 text-white"
           : "bg-red-500 text-white"
       }" style="width: fit-content">${booking.payment_status}</span></td>
-      <td class="py-6 px-6 flex space-x-2">
+      <td class="py-6  flex space-x-2">
   ${
-    booking.status === "accepted" && localStorage.getItem("type") === "customer"
-      ? `<button class="text-blue-600 text-sm font-medium hover:underline payBooking" data-status="Paid">Pay</button>
-         <button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}" data-status="cancelled">Cancel</button>`
-      : booking.status === "pending" &&
-        localStorage.getItem("type") === "customer"
-      ? `<button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}" data-status="cancelled">Cancel</button>`
-      : booking.status === "pending" &&
-        localStorage.getItem("type") === "service provider"
-      ? `<button class="text-blue-600 text-sm font-medium hover:underline acceptBooking" data-id="${booking.id}" data-status="accepted">Accept</button>
-         <button class="text-red-600 text-sm font-medium hover:underline declineBooking" data-id="${booking.id}" data-status="declined">Decline</button>`
+    booking.status === "accepted" &&
+    booking.payment_status === "paid" &&
+    userType === "customer"
+      ? `<button class="text-blue-600 text-sm font-medium hover:underline reviewBooking flex" data-id="${booking.id}" data-service-id="${booking.service_id}" data-provider-id="${booking.provider_id}">Leave a review</button>`
       : booking.status === "accepted" &&
-        localStorage.getItem("type") === "service provider"
+        booking.payment_status === "paid" &&
+        userType === "service provider"
+      ? `<small>no action.</small>`
+      : booking.status === "accepted" && userType === "customer"
+      ? `<button class="text-blue-600 text-sm font-medium hover:underline payBooking" data-status="paid">Pay</button>
+       <button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}" data-status="cancelled">Cancel</button>`
+      : booking.status === "pending" && userType === "customer"
+      ? `<button class="text-red-600 text-sm font-medium hover:underline cancelBooking" data-id="${booking.id}" data-status="cancelled">Cancel</button>`
+      : booking.status === "pending" && userType === "service provider"
+      ? `<button class="text-blue-600 text-sm font-medium hover:underline acceptBooking" data-id="${booking.id}" data-status="accepted">Accept</button>
+       <button class="text-red-600 text-sm font-medium hover:underline declineBooking" data-id="${booking.id}" data-status="declined">Decline</button>`
+      : booking.status === "accepted" && userType === "service provider"
       ? `<button class="text-red-600 text-sm font-medium hover:underline declineBooking" data-id="${booking.id}" data-status="declined">Decline</button>`
       : `<small>no action.</small>`
   }
@@ -229,6 +267,21 @@ document.getElementById("sortPayment").addEventListener("change", function () {
   sortTable("payment_status", "asc", this.value);
 });
 
+async function sendNotification(data) {
+  console.log(data);
+  const response = await fetch(backendURL + "/api/notification", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error(await response.text());
+  console.log("Notification sent successfully");
+}
+
 // Load data on page load
 loadCachedBooking();
 
@@ -301,6 +354,7 @@ if (localStorage.getItem("type") === "service provider") {
         document.getElementById("declineButton").dataset.status;
       const data = {
         status: bookingStatus,
+        payment_status: "not available",
       };
       await updateBookingStatus(bookingId, data);
     });
@@ -336,8 +390,6 @@ if (localStorage.getItem("type") === "service provider") {
   });
 
   tableBody.addEventListener("click", (e) => {
-    console.log("naclick??");
-
     if (e.target.classList.contains("acceptBooking")) {
       const bookingId = parseInt(e.target.dataset.id);
       const bookingStatus = e.target.dataset.status;
@@ -368,6 +420,7 @@ if (localStorage.getItem("type") === "service provider") {
 
       const data = {
         status: bookingStatus,
+        payment_status: "not available",
       };
 
       await updateBookingStatus(bookingId, data);
@@ -382,22 +435,84 @@ if (localStorage.getItem("type") === "service provider") {
       document.getElementById("cancelButton").dataset.status = bookingStatus;
     }
   });
+
+  tableBody.addEventListener("click", (e) => {
+    if (e.target.classList.contains("reviewBooking")) {
+      const bookingServiceId = e.target.dataset.serviceId;
+      const bookingproviderId = e.target.dataset.providerId;
+
+      document.getElementById("reviewModal").classList.remove("hidden");
+      document.getElementById("serviceId").value = bookingServiceId;
+      document.getElementById("providerId").value = bookingproviderId;
+      document.getElementById("customerId").value = userId;
+    }
+  });
+
+  const sendReviewForm = document.getElementById("send_review_form");
+
+  sendReviewForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(sendReviewForm);
+
+    document.querySelector(".sendReviewButton").innerText = "Sending...";
+    document.querySelector(".sendReviewButton").disabled = true;
+
+    const response = await fetch(backendURL + "/api/review", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: formData,
+    });
+
+    const sendData = await response.json();
+
+    if (!response.ok) {
+      document.querySelector(".sendReviewButton").innerText = "Send";
+      document.querySelector(".sendReviewButton").disabled = false;
+      alert(await response.text());
+      throw new Error(await response.text());
+    }
+
+    await fetchBooking();
+    sendReviewForm.reset();
+    document.querySelector(".sendReviewButton").innerText = "Send";
+    document.querySelector(".sendReviewButton").disabled = false;
+    document.getElementById("reviewModal").classList.add("hidden");
+    createToast("Review sent successfully");
+
+    const data = {
+      type: "review",
+      header_text: "New Customer Review",
+      message: `"${sendData.review_text}" with the rating of ${sendData.rating}`,
+      user_id: sendData.provider_id,
+    };
+
+    sendNotification(data);
+  });
 }
 
 async function updateBookingStatus(bookingId, data) {
-  const request = await fetch(backendURL + "/api/booking/status/" + bookingId, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(
+    backendURL + "/api/booking/status/" + bookingId,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify(data),
+    }
+  );
 
-  if (!request.ok) {
-    throw new Error(await request.text());
+  if (!response.ok) {
+    throw new Error(await response.text());
   }
+
+  const bookingData = await response.json();
 
   if (data.status === "cancelled") {
     confirmationModal.classList.add("hidden");
@@ -406,7 +521,38 @@ async function updateBookingStatus(bookingId, data) {
   } else {
     declineConfirmationModal.classList.add("hidden");
   }
-  fetchBooking();
-}
+  await fetchBooking();
 
-async function updatePaymentStatus() {}
+  const spData = spDatas.find((sp) => sp.id === bookingData.provider_id);
+  const booking = bookings.find((b) => b.id === bookingId);
+
+  console.log(booking, spData, bookingData);
+
+  const notifData = {
+    type: "booking",
+    header_text:
+      data.status === "accepted"
+        ? `Booking Confirmed`
+        : data.status === "declined"
+        ? `Booking Declined`
+        : data.status === "cancelled"
+        ? `Booking Cancelled`
+        : ``,
+    message:
+      data.status === "accepted"
+        ? `Booking has been confirmed by ${spData.business_name}`
+        : data.status === "declined"
+        ? `Booking has been declined by ${spData.business_name}`
+        : data.status === "cancelled"
+        ? `Booking has been cancelled on ${booking.services.service_name} by ${booking.event.event_name}`
+        : ``,
+    user_id:
+      data.status === "accepted" || data.status === "declined"
+        ? bookingData.customer_id
+        : data.status === "cancelled"
+        ? bookingData.provider_id
+        : "",
+  };
+
+  sendNotification(notifData);
+}

@@ -8,11 +8,21 @@ const CACHE_NAME = "services-cache";
 const SP_NAME = "service-provider-cache";
 const SERVICES_URL = backendURL + "/api/services/index";
 const CATEGORY_URL = backendURL + "/api/category";
+const SP_CACHE_NAME = "service-provider-cache";
+const SERVICE_PROVIDER_URL = backendURL + "/api/service-provider";
 
 const cache = await caches.open(CACHE_NAME);
+const spCache = await caches.open(SP_CACHE_NAME);
 
 async function fetchServices(firstLoad = false) {
   const response = await fetch(SERVICES_URL, {
+    headers: {
+      Accept: "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+
+  const spResponse = await fetch(SERVICE_PROVIDER_URL, {
     headers: {
       Accept: "application/json",
       Authorization: "Bearer " + localStorage.getItem("token"),
@@ -23,9 +33,16 @@ async function fetchServices(firstLoad = false) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
+  if (!spResponse.ok) {
+    throw new Error(`HTTP error! Status: ${spResponse.status}`);
+  }
+
   const data = await response.json();
+  const spData = await spResponse.json();
 
   await cache.put(SERVICES_URL, new Response(JSON.stringify(data)));
+  await spCache.put(SERVICE_PROVIDER_URL, new Response(JSON.stringify(spData)));
+
   console.log(firstLoad);
   if (firstLoad) {
     location.reload();
@@ -63,10 +80,11 @@ async function getServicesHTML() {
               ].price_range_min.toLocaleString()} - ${data[
       i
     ].price_range_max.toLocaleString()}</td>
-              <td class="items-center"><span class="shadow-sm border border-gray-300 py-2 px-3 rounded-lg ${
+    <td class="px-6 py-4">${data[i].description}</td>
+              <td class="items-center"><span class="text-xs py-1 px-2 text-white rounded-xl ${
                 data[i].availability_status === "Unavailable"
-                  ? `text-red-500`
-                  : `text-green-500`
+                  ? `bg-red-500`
+                  : `bg-green-500`
               }">${data[i].availability_status}</span></td>
               <td class="px-6 py-4 flex">
                 <button

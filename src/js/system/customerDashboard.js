@@ -1,5 +1,7 @@
 import { backendURL, formatDate } from "../utils/utils.js";
 
+const loader = document.querySelector("#pulseLoader");
+
 const upcomingEventsContainer = document.getElementById(
   "upcoming-events-container"
 );
@@ -10,7 +12,7 @@ const notificationsContainer = document.getElementById(
 );
 const activeBookingsTable = document.getElementById("active-bookings");
 
-const BUDGET_CACHE_NAME = "budget-cache";
+const BUDGET_CACHE_NAME = "allocated-budget-cache";
 const EVENT_CACHE_NAME = "events-cache";
 const BOOKING_CACHE_NAME = "booking-cache";
 const NOTIFICATION_CACHE_NAME = "notification-cache";
@@ -43,6 +45,76 @@ const [budgetcache, eventcache, bookingcache, notificationcache, spcache] =
   ]);
 
 async function fetchData(firstLoad = false) {
+  loader.innerHTML = `<div class="max-w-7xl mx-auto px-6 py-8">
+  <h1 class="text-lg font-bold text-gray-900 mb-5">Dashboard</h1>
+
+  <!-- Upcoming Events Skeleton -->
+  <div class="bg-white border-gray-300 border shadow-sm rounded-lg p-6 mb-3 animate-pulse">
+    <h2 class="text-md font-semibold text-gray-900 mb-4"><div class="h-6 bg-gray-300 rounded w-1/8"></div></h2>
+    <ul class="space-y-4">
+      <li class="h-6 bg-gray-300 rounded w-full"></li>
+      <li class="h-6 bg-gray-300 rounded w-3/4"></li>
+    </ul>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-4 mt-8">
+    <!-- Budget Tracker Skeleton -->
+    <div class="w-full md:w-1/2 bg-white border-gray-300 border shadow-sm rounded-lg p-6 animate-pulse">
+      <h2 class="text-md font-semibold text-gray-900 mb-4 flex justify-between">
+        <div class="h-6 bg-gray-300 rounded w-1/8"></div>
+        <div class="h-8 bg-gray-300 rounded w-36"></div>
+      </h2>
+      <div class="h-24 bg-gray-300 rounded"></div>
+    </div>
+
+    <!-- Notifications Skeleton -->
+    <div class="w-full md:w-1/2 bg-white border-gray-300 border shadow-sm rounded-lg p-6 animate-pulse">
+      <h2 class="text-md font-semibold text-gray-900 mb-4"><div class="h-6 bg-gray-300 rounded w-1/8"></div></h2>
+      <ul class="space-y-3">
+        <li class="h-6 bg-gray-300 rounded w-full"></li>
+        <li class="h-6 bg-gray-300 rounded w-3/4"></li>
+        <li class="h-6 bg-gray-300 rounded w-1/2"></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Quick Actions Skeleton -->
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-1 gap-6">
+    <div class="bg-white border-gray-300 border shadow-sm rounded-lg p-6 animate-pulse">
+      <h2 class="text-md font-semibold text-gray-900 mb-4 flex justify-between">
+        <div class="h-6 bg-gray-300 rounded w-1/8"></div>
+        <div class="h-6 bg-gray-300 rounded w-24"></div>
+      </h2>
+      <div class="overflow-x-auto sm:rounded-lg">
+        <table class="w-full text-sm text-left text-gray-600">
+          <thead class="text-xs text-gray-700 uppercase0">
+            <tr>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-full"></div></th>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-3/4"></div></th>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-1/2"></div></th>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-full"></div></th>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-3/4"></div></th>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-1/2"></div></th>
+              <th class="px-6 py-3"><div class="h-6 bg-gray-300 rounded w-full"></div></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-full"></div></td>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-3/4"></div></td>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-1/2"></div></td>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-full"></div></td>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-3/4"></div></td>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-1/2"></div></td>
+              <td class="px-6 py-4"><div class="h-6 bg-gray-300 rounded w-full"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>`;
+
   const urls = [
     BUDGET_URL,
     EVENT_URL,
@@ -221,6 +293,8 @@ eventOptions.addEventListener("change", () => {
     (budget) => budget.event_id === selectedEventId
   );
 
+  console.log(eventBudget, budgetData);
+
   const eventTotalSpent = eventBudget.reduce(
     (total, budget) => total + budget.actual_spent,
     0
@@ -290,7 +364,8 @@ function getActivebooking() {
     }</span></td>
     </tr>`;
   }
-  console.log(activeBookingsTable);
+
+  loader.innerHTML = ``;
   activeBookingsTable.innerHTML = activeBookingHTML;
 }
 

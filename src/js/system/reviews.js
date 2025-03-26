@@ -101,13 +101,13 @@ function renderReviewsTable() {
         <td class="px-6 py-4">${review.review_text}</td>
         <td class="px-6 py-4">${formatDate(review.created_at)}</td>
         <td class="px-6 py-4 flex">
-          <button
+          <!-- <button
             type="button"
             data-id="${review.id}"
             class="font-medium text-blue-500 flex cursor-pointer replyReview "
           >
             Reply
-          </button>
+          </button> -->
           <button
             type="button"
             data-id="${review.id}"

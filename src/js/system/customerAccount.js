@@ -7,7 +7,7 @@ console.log(updatePasswordBtn);
 
 let data = [];
 
-async function fetchSpData() {
+async function fetchUserData() {
   const response = await fetch(backendURL + "/api/user/" + userId, {
     headers: {
       Accept: "application/json",
@@ -24,26 +24,12 @@ async function fetchSpData() {
   console.log(data);
 
   if (response.ok) {
-    const businessTypeSelect = document.getElementById("businessType");
-    const businessTypes = data.provider_data.business_type.split(", ");
+    document.getElementById("fullname").value = data.fullname;
+    document.getElementById("email").value = data.email;
+    document.getElementById("phone_number").value = data.phone_number;
 
-    document.getElementById("businessName").value =
-      data.provider_data.business_name;
-    document.getElementById("businessEmail").value = data.provider_data.email;
-    document.getElementById("businessPhone").value = data.phone_number;
-    document.getElementById("yearsInBusiness").value =
-      data.provider_data.years_in_business;
-    document.getElementById("websiteURL").value =
-      data.provider_data.website_url;
-    document.getElementById("location").value = data.provider_data.location;
-
-    for (let option of businessTypeSelect.options) {
-      if (businessTypes.includes(option.value.trim())) {
-        option.selected = true;
-      }
-    }
-    document.getElementById("description").value =
-      data.provider_data.description;
+    document.getElementById("display_image").src =
+      backendURL + "/storage/" + data.profile_picture;
   }
 }
 
@@ -55,18 +41,15 @@ updateBusinessForm.addEventListener("submit", async (e) => {
 
   const formData = new FormData(updateBusinessForm);
 
-  const businessTypeData = formData.getAll("business_type[]");
+  // check data sent in loop
+  for (const [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
 
-  let businessTypes = "";
+  formData.append("_method", "PUT");
 
-  businessTypeData.forEach((element) => {
-    businessTypes += `${element}, `;
-  });
-  console.log(data.provider_data.id);
-  formData.append("business_type", businessTypes);
-
-  await fetch(backendURL + "/api/service-provider/" + data.provider_data.id, {
-    method: "PUT",
+  const response = await fetch(backendURL + "/api/user/" + userId, {
+    method: "POST",
     headers: {
       Accept: "application/json",
       Authorization: "Bearer " + localStorage.getItem("token"),
@@ -74,21 +57,20 @@ updateBusinessForm.addEventListener("submit", async (e) => {
     body: formData,
   });
 
-  const userDataForm = new FormData();
-  userDataForm.append("phone_number", formData.get("phone_number"));
+  const json_data = await response.json();
 
-  await fetch(backendURL + "/api/user/" + userId, {
-    method: "PUT",
-    headers: {
-      Accept: "application/json",
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-    body: userDataForm,
-  });
+  if (!response.ok) {
+    console.error("Error updating information");
+    updateBusinessForm.querySelector("button").disabled = false;
+    updateBusinessForm.querySelector("button").innerText = "Save Changes";
+    createToast(`${json_data.message}`, "failed");
+    return;
+  }
 
   updateBusinessForm.querySelector("button").disabled = false;
   updateBusinessForm.querySelector("button").innerText = "Save Changes";
-  createToast("Business information has been updated successfully!");
+  createToast("Persoanl information has been updated successfully!");
+  await fetchUserData();
 });
 
 updatePasswordBtn.addEventListener("click", async function () {
@@ -156,4 +138,4 @@ updatePasswordBtn.addEventListener("click", async function () {
   }
 });
 
-fetchSpData();
+fetchUserData();

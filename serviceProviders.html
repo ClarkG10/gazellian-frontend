@@ -254,24 +254,16 @@
     <div class="flex min-h-screen mt-2 px-30">
       <!-- filter -->
       <div class="p-4 flex flex-col gap-3">
-        <!-- search filter -->
-        <form id="search_form">
-          <div class="flex items-center gap-1">
-            <input
-              type="text"
-              id="search"
-              name="keyword"
-              placeholder="Search for services"
-              class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-            <button
-              class="w-1/3 customBg text-sm text-white p-1 rounded-lg hover:bg-gray-700"
-            >
-              Search
-            </button>
-          </div>
-        </form>
-        <div class="flex items-center gap-1 font-semibold mt-1">
+        <div class="flex items-center gap-2">
+          <input
+            type="text"
+            id="search"
+            name="keyword"
+            placeholder="Search for service providers"
+            class="w-full p-2 border border-gray-300 rounded-lg text-sm"
+          />
+        </div>
+        <div class="flex items-center gap-2 font-semibold mt-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -288,87 +280,239 @@
           </svg>
           Filter
         </div>
+
         <!-- Price Range Filter -->
         <div>
-          <label for="price" class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700"
             >Price Range</label
           >
           <div class="flex items-center gap-2 mt-1">
             <input
               type="number"
-              id="min-price"
+              id="filter-min-price"
               name="min-price"
               placeholder="Min Price"
               min="0"
-              class="w-1/2 p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+              class="w-1/2 p-2 border border-gray-300 rounded-lg text-sm"
             />
-
             <span class="text-sm text-gray-500">-</span>
-
             <input
               type="number"
-              id="max-price"
+              id="filter-max-price"
               name="max-price"
               placeholder="Max Price"
               min="0"
-              class="w-1/2 p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+              class="w-1/2 p-2 border border-gray-300 rounded-lg text-sm"
             />
           </div>
         </div>
 
         <!-- Service Provider Category Filter -->
         <div>
-          <label for="category" class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700"
             >Service Category</label
           >
           <select
-            id="category"
+            id="filter-category"
             name="category"
-            class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">All Categories</option>
-            <option value="makeup">Makeup Artist</option>
-            <option value="photography">Photographer & Videographer</option>
-            <option value="venue">Venues</option>
-            <option value="catering">Catering</option>
-          </select>
+            class="filter-input w-full p-2 border border-gray-300 rounded-lg text-sm"
+          ></select>
         </div>
 
         <!-- Ratings Filter -->
         <div>
-          <label for="rating" class="block text-sm font-medium text-gray-700"
-            >Ratings</label
-          >
+          <label class="block text-sm font-medium text-gray-700">Ratings</label>
           <select
-            id="rating"
+            id="filter-rating"
             name="rating"
-            class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-yellow-500 focus:border-yellow-500"
+            class="filter-input w-full p-2 border border-gray-300 rounded-lg text-sm"
           >
             <option value="">All Ratings</option>
-            <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
-            <option value="4">⭐⭐⭐⭐ (4 Stars & Up)</option>
-            <option value="3">⭐⭐⭐ (3 Stars & Up)</option>
-            <option value="2">⭐⭐ (2 Stars & Up)</option>
+            <option value="5">
+              &#9733;&#9733;&#9733;&#9733;&#9733; (5 Stars)
+            </option>
+            <option value="4">
+              &#9733;&#9733;&#9733;&#9733;&#9734; (4 Stars)
+            </option>
+            <option value="3">
+              &#9733;&#9733;&#9733;&#9734;&#9734; (3 Stars)
+            </option>
+            <option value="2">
+              &#9733;&#9733;&#9734;&#9734;&#9734; (2 Stars)
+            </option>
+            <option value="1">
+              &#9733;&#9734;&#9734;&#9734;&#9734; (1 Star)
+            </option>
+            <option value="0">
+              &#9734;&#9734;&#9734;&#9734;&#9734; (0 Star)
+            </option>
           </select>
         </div>
 
         <!-- Location Filter -->
         <div>
-          <label for="location" class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700"
             >Location</label
           >
           <select
-            id="location"
+            id="filter-location"
             name="location"
-            class="w-full p-1 border border-gray-300 rounded-lg text-sm focus:ring-green-500 focus:border-green-500"
+            class="filter-input w-full p-2 border border-gray-300 rounded-lg text-sm"
           >
             <option value="">All Locations</option>
-            <option value="butuan">Butuan City</option>
-            <option value="cdo">Cagayan de Oro</option>
-            <option value="davao">Davao City</option>
+
+            <!-- NCR (Metro Manila) -->
+            <optgroup label="Metro Manila (NCR)">
+              <option value="Caloocan">Caloocan</option>
+              <option value="Las Piñas">Las Piñas</option>
+              <option value="Makati">Makati</option>
+              <option value="Malabon">Malabon</option>
+              <option value="Mandaluyong">Mandaluyong</option>
+              <option value="Manila">Manila</option>
+              <option value="Marikina">Marikina</option>
+              <option value="Muntinlupa">Muntinlupa</option>
+              <option value="Navotas">Navotas</option>
+              <option value="Parañaque">Parañaque</option>
+              <option value="Pasay">Pasay</option>
+              <option value="Pasig">Pasig</option>
+              <option value="Quezon City">Quezon City</option>
+              <option value="San Juan">San Juan</option>
+              <option value="Taguig">Taguig</option>
+              <option value="Valenzuela">Valenzuela</option>
+            </optgroup>
+
+            <!-- Region I (Ilocos Region) -->
+            <optgroup label="Region I (Ilocos Region)">
+              <option value="Alaminos">Alaminos</option>
+              <option value="Batac">Batac</option>
+              <option value="Candon">Candon</option>
+              <option value="Dagupan">Dagupan</option>
+              <option value="Laoag">Laoag</option>
+              <option value="San Carlos (Pangasinan)">San Carlos</option>
+              <option value="San Fernando (La Union)">San Fernando</option>
+              <option value="Urdaneta">Urdaneta</option>
+              <option value="Vigan">Vigan</option>
+            </optgroup>
+
+            <!-- Region II (Cagayan Valley) -->
+            <optgroup label="Region II (Cagayan Valley)">
+              <option value="Cauayan">Cauayan</option>
+              <option value="Ilagan">Ilagan</option>
+              <option value="Santiago">Santiago</option>
+              <option value="Tuguegarao">Tuguegarao</option>
+            </optgroup>
+
+            <!-- Region III (Central Luzon) -->
+            <optgroup label="Region III (Central Luzon)">
+              <option value="Angeles">Angeles</option>
+              <option value="Balanga">Balanga</option>
+              <option value="Cabanatuan">Cabanatuan</option>
+              <option value="Gapan">Gapan</option>
+              <option value="Malolos">Malolos</option>
+              <option value="Meycauayan">Meycauayan</option>
+              <option value="Olongapo">Olongapo</option>
+              <option value="San Fernando (Pampanga)">San Fernando</option>
+              <option value="San Jose del Monte">San Jose del Monte</option>
+              <option value="Tarlac City">Tarlac City</option>
+            </optgroup>
+
+            <!-- Region IV-A (CALABARZON) -->
+            <optgroup label="Region IV-A (CALABARZON)">
+              <option value="Antipolo">Antipolo</option>
+              <option value="Batangas City">Batangas City</option>
+              <option value="Biñan">Biñan</option>
+              <option value="Cabuyao">Cabuyao</option>
+              <option value="Calamba">Calamba</option>
+              <option value="Lipa">Lipa</option>
+              <option value="Lucena">Lucena</option>
+              <option value="San Pablo">San Pablo</option>
+              <option value="Santo Tomas">Santo Tomas</option>
+              <option value="Santa Rosa">Santa Rosa</option>
+              <option value="Tanauan">Tanauan</option>
+            </optgroup>
+
+            <!-- Region IV-B (MIMAROPA) -->
+            <optgroup label="Region IV-B (MIMAROPA)">
+              <option value="Calapan">Calapan</option>
+              <option value="Puerto Princesa">Puerto Princesa</option>
+            </optgroup>
+
+            <!-- Region V (Bicol Region) -->
+            <optgroup label="Region V (Bicol Region)">
+              <option value="Iriga">Iriga</option>
+              <option value="Legazpi">Legazpi</option>
+              <option value="Ligao">Ligao</option>
+              <option value="Masbate City">Masbate City</option>
+              <option value="Naga">Naga</option>
+              <option value="Sorsogon City">Sorsogon City</option>
+              <option value="Tabaco">Tabaco</option>
+            </optgroup>
+
+            <!-- Region VI (Western Visayas) -->
+            <optgroup label="Region VI (Western Visayas)">
+              <option value="Bacolod">Bacolod</option>
+              <option value="Bago">Bago</option>
+              <option value="Cadiz">Cadiz</option>
+              <option value="Escalante">Escalante</option>
+              <option value="Iloilo City">Iloilo City</option>
+              <option value="Kabankalan">Kabankalan</option>
+              <option value="La Carlota">La Carlota</option>
+              <option value="Passi">Passi</option>
+              <option value="Roxas City">Roxas City</option>
+              <option value="Silay">Silay</option>
+              <option value="Sipalay">Sipalay</option>
+              <option value="Talisay (Negros Occidental)">Talisay</option>
+              <option value="Victorias">Victorias</option>
+            </optgroup>
+
+            <!-- Region VII (Central Visayas) -->
+            <optgroup label="Region VII (Central Visayas)">
+              <option value="Bais">Bais</option>
+              <option value="Bayawan">Bayawan</option>
+              <option value="Cebu City">Cebu City</option>
+              <option value="Danao">Danao</option>
+              <option value="Dumaguete">Dumaguete</option>
+              <option value="Lapu-Lapu">Lapu-Lapu</option>
+              <option value="Mandaue">Mandaue</option>
+              <option value="Tagbilaran">Tagbilaran</option>
+              <option value="Talisay (Cebu)">Talisay</option>
+              <option value="Toledo">Toledo</option>
+            </optgroup>
+
+            <!-- Region X (Northern Mindanao) -->
+            <optgroup label="Region X (Northern Mindanao)">
+              <option value="Cagayan de Oro">Cagayan de Oro</option>
+              <option value="El Salvador">El Salvador</option>
+              <option value="Gingoog">Gingoog</option>
+              <option value="Iligan">Iligan</option>
+              <option value="Malaybalay">Malaybalay</option>
+              <option value="Oroquieta">Oroquieta</option>
+              <option value="Ozamiz">Ozamiz</option>
+              <option value="Tangub">Tangub</option>
+              <option value="Valencia (Bukidnon)">Valencia</option>
+            </optgroup>
+
+            <!-- Region XIII (Caraga) -->
+            <optgroup label="Region XIII (Caraga)">
+              <option value="Bayugan">Bayugan</option>
+              <option value="Bislig">Bislig</option>
+              <option value="Butuan">Butuan</option>
+              <option value="Cabadbaran">Cabadbaran</option>
+              <option value="Surigao City">Surigao City</option>
+              <option value="Tandag">Tandag</option>
+            </optgroup>
           </select>
         </div>
+
+        <!-- reset button -->
+        <button
+          id="resetFilter"
+          class="w-full py-2 px-3 text-sm font-medium text-white customBg rounded-md hover:bg-gray-300"
+        >
+          Reset Filters
+        </button>
       </div>
+
       <div class="w-full">
         <!-- card -->
         <div class="flex w-full mt-4 ms-4 flex-col items-end space-y-3">
@@ -447,7 +591,6 @@
       </a>`;
       }
     </script>
-    <!-- JavaScript -->
     <script>
       if (localStorage.getItem("token") != null) {
         const backendURL = "http://gazellian.test";
@@ -556,8 +699,17 @@
 
             booking_form.querySelector("button").innerText = `Book Now`;
             booking_form.querySelectorAll("button").disabled = false;
-            closeBookingModal();
             await fetchBooking();
+
+            const data = {
+              type: "booking",
+              header_text: "New Booking Request",
+              message: "A new booking has been made for you",
+              user_id: id,
+            };
+
+            sendNotification(data);
+            closeBookingModal();
           };
 
           function closeBookingModal() {
@@ -572,6 +724,21 @@
 
         function closeBookingModal() {
           document.getElementById("bookingModal").classList.add("hidden");
+        }
+
+        async function sendNotification(data) {
+          console.log(data);
+          const response = await fetch(backendURL + "/api/notification", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(data),
+          });
+          if (!response.ok) throw new Error(await response.text());
+          console.log("Notification sent successfully");
         }
       }
     </script>

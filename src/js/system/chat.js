@@ -37,6 +37,7 @@ async function fetchChatDatas(firstLoad) {
   cache.put(CHAT_MESSAGES_URL, new Response(JSON.stringify(chatDataCached)));
 
   if (selectedConversation) {
+    getConversationList();
     await getMessages(selectedConversation);
   } else if (firstLoad) {
     location.reload();
@@ -137,6 +138,7 @@ eventSource.onmessage = async (event) => {
 
   if (unreadCount !== previousLength) {
     previousLength = unreadCount;
+
     await fetchChatDatas();
     getConversationList();
     scrollToBottom();
@@ -221,7 +223,11 @@ async function updateChatHeader(senderId) {
       user.profile_picture
     }" class="w-12 h-12 rounded-full object-cover mr-3" alt="Chat User"/>
       <h3 class="text-lg font-semibold text-gray-900">
-        ${user.provider ? user.provider.business_name : user.fullname}
+        ${
+          user.provider !== null
+            ? user.provider_data.business_name
+            : user.fullname
+        }
       </h3>`;
   } catch (error) {
     console.error("Error updating chat header:", error);
@@ -349,8 +355,8 @@ searchInput.addEventListener("input", function () {
     });
 });
 
-function removeUrlParam(param) {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(param);
-  window.history.replaceState({}, document.title, url.toString());
-}
+// function removeUrlParam(param) {
+//   const url = new URL(window.location.href);
+//   url.searchParams.delete(param);
+//   window.history.replaceState({}, document.title, url.toString());
+// }

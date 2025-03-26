@@ -1,6 +1,7 @@
 import { backendURL } from "../utils/utils.js";
 
 const spCard = document.getElementById("serviceProviderCard");
+const filterCategory = document.getElementById("filter-category");
 const UPDATE_INTERVAL = 5 * 60 * 1000;
 
 const CACHE_NAME = "service-provider-cache";
@@ -71,6 +72,11 @@ setInterval(() => {
 
 async function getServiceProviderHTML(spData, categoryData) {
   let serviceProviderHTML = "";
+  let categoryOptions = `<option value="" selected>All Categories</option>`;
+
+  for (let i = 0; i < categoryData.length; i++) {
+    categoryOptions += `<option value="${categoryData[i].category_name}">${categoryData[i].category_name}</option>`;
+  }
 
   spData.forEach((sp) => {
     let servicesHTML = "";
@@ -80,7 +86,7 @@ async function getServiceProviderHTML(spData, categoryData) {
     for (let services of sp.services) {
       const category = categoryData.find((c) => c.id == services.category_id);
       servicesHTML += `<span
-                    class="text-xs mt-1 btn-sm px-3 py-1 me-1 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 category-name"
+                    class="text-xs mt-1 btn-sm px-3 py-1 me-1 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 categoryName"
                     >${category.category_name}</span
                   >`;
       // store into array
@@ -107,24 +113,24 @@ async function getServiceProviderHTML(spData, categoryData) {
             <div
               class="flex flex-col justify-between p-4 leading-normal w-full"
             >
-              <h5 class="mb-1 text-md font-bold text-gray-900">
+              <h5 class="mb-1 text-md font-bold text-gray-900" id="businessName">
                 ${sp.business_name}
               </h5>
 
               <!-- Rating (Stars) -->
               <div class="text-sm flex items-center mb-1">
-                <span class="text-yellow-500 ratings"
+                <span class="text-yellow-500 ratings" 
                   >★ ${
                     sp.average_rating == 0
                       ? `No rating yet`
-                      : `${sp.average_rating}`
+                      : `<span id="avg_rating">${sp.average_rating}</span>`
                   }
-                  <span class="text-xs text-gray-400 location">
+                  <span class="text-xs text-gray-400" id="location">
                     ${sp.location}</span
                   ></span
                 >
               </div>
-              <p class="text-sm text-gray-700 line-clamp-2">
+              <p class="text-sm text-gray-700 line-clamp-2" >
               ${sp.description}. 
               </p>
 
@@ -148,7 +154,7 @@ async function getServiceProviderHTML(spData, categoryData) {
                       />
                     </svg>
                   </strong>
-                  <span class="price-min">${priceRangeMin[0].toLocaleString()}</span> - <span class="price-max">${priceRangeMax[0].toLocaleString()}</span>
+                  <span id="min_price">${priceRangeMin[0].toLocaleString()}</span> - <span id="max_price">${priceRangeMax[0].toLocaleString()}</span>
                 </p>
 
                 <!-- Service Tags -->
@@ -206,6 +212,7 @@ async function getServiceProviderHTML(spData, categoryData) {
   }
 
   spCard.innerHTML = serviceProviderHTML;
+  filterCategory.innerHTML = categoryOptions;
 
   let currentPage = 1;
   const spPerPage = 10;
@@ -296,3 +303,94 @@ if (localStorage.getItem("token") != null) {
     });
   }
 }
+
+function filterServiceProviders() {
+  // Get filter values
+  const searchKeyword = document.getElementById("search").value.toLowerCase();
+  const selectedLocation = document
+    .getElementById("filter-location")
+    ?.value.toLowerCase();
+  const selectedRating =
+    parseFloat(document.getElementById("filter-rating")?.value) || 0;
+  const selectedCategory = document
+    .getElementById("filter-category")
+    ?.value.toLowerCase();
+  const minPrice =
+    parseFloat(document.getElementById("filter-min-price")?.value) || 0;
+  const maxPrice =
+    parseFloat(document.getElementById("filter-max-price")?.value) || Infinity;
+
+  // Get all service provider cards
+  const serviceProviderCards = document.querySelectorAll(".sp-card");
+
+  serviceProviderCards.forEach((card) => {
+    const businessName = card
+      .querySelector("#businessName")
+      .textContent.toLowerCase();
+    const location = card.querySelector("#location").textContent.toLowerCase();
+    const rating =
+      parseFloat(card.querySelector("#avg_rating").textContent) || 0;
+    const minPriceValue =
+      parseFloat(
+        card.querySelector("#min_price").textContent.replace(/,/g, "")
+      ) || 0;
+    const maxPriceValue =
+      parseFloat(
+        card.querySelector("#max_price").textContent.replace(/,/g, "")
+      ) || Infinity;
+
+    const categoryNames = Array.from(card.querySelectorAll(".categoryName"))
+      .map((el) => el.innerText.toLowerCase())
+      .join(" "); // Join all category names into a single string
+
+    console.log(categoryNames);
+
+    // Filtering logic
+    const matchesSearch = businessName.includes(searchKeyword);
+    const matchesLocation =
+      !selectedLocation || location.includes(selectedLocation);
+    const matchesRating = rating >= selectedRating;
+    const matchesCategory =
+      !selectedCategory || categoryNames.includes(selectedCategory);
+    const matchesPrice =
+      (minPriceValue >= minPrice && minPriceValue <= maxPrice) ||
+      (maxPriceValue >= minPrice && maxPriceValue <= maxPrice) ||
+      (minPriceValue <= minPrice && maxPriceValue >= maxPrice);
+
+    // Show or hide card based on matches
+    card.style.display =
+      matchesSearch &&
+      matchesLocation &&
+      matchesRating &&
+      matchesCategory &&
+      matchesPrice
+        ? "flex"
+        : "none";
+  });
+}
+
+// Event Listeners
+document
+  .getElementById("search")
+  .addEventListener("input", filterServiceProviders);
+
+document
+  .getElementById("filter-min-price")
+  .addEventListener("input", filterServiceProviders);
+
+document.querySelectorAll(".filter-input").forEach((input) => {
+  input.addEventListener("change", filterServiceProviders);
+});
+
+function resetFilters() {
+  document.getElementById("search").value = "";
+  document.getElementById("filter-min-price").value = "";
+  document.getElementById("filter-max-price").value = "";
+  document.getElementById("filter-category").value = "";
+  document.getElementById("filter-rating").value = "";
+  document.getElementById("filter-location").value = "";
+
+  filterServiceProviders();
+}
+
+document.getElementById("resetFilter").addEventListener("click", resetFilters);

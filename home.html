@@ -29,7 +29,7 @@
         >
           <img src="src/imgs/G.png" class="h-10" alt="Gazellian Logo" />
           <span
-            class="self-center text-2xl font-semibold whitespace-nowrap light:text-white"
+            class="self-center text-xl font-semibold whitespace-nowrap light:text-white"
             >Gazellian</span
           >
         </a>
@@ -126,109 +126,245 @@
 
     <!-- Hero Section -->
     <section
-      class="relative text-white text-center py-20"
-      style="background-color: #9973ac"
+      class="relative text-white text-center py-32 bg-gradient-to-r from-[#9960ac] to-[#9973ac] shadow-lg"
     >
-      <div class="max-w-3xl mx-auto">
-        <h1 class="text-4xl font-bold mb-4">
-          Plan & Manage Events Effortlessly
+      <div class="max-w-5xl mx-auto px-6">
+        <h1 class="text-4xl font-extrabold mb-3 leading-tight">
+          Plan & Manage Events with Ease
         </h1>
-        <p class="text-lg mb-6">
-          Connect with trusted event service providers, optimize your budget,
-          and make your events unforgettable.
+        <p class="text-lg mb-6 opacity-90">
+          Discover trusted service providers, manage your budget, and create
+          unforgettable events with ease.
         </p>
-        <span id="startLink"></span>
+        <a
+          id="startLink"
+          class="bg-white customTextColor px-6 py-3 text-sm rounded-full font-semibold shadow-md"
+        >
+          Get Started
+        </a>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="max-w-6xl mx-auto py-16 px-6">
-      <h2 class="text-3xl font-bold text-center text-gray-900 mb-10">
+    <section class="max-w-7xl mx-auto py-20 px-8">
+      <h2 class="text-2xl font-bold text-center text-gray-900 mb-12">
         Why Choose Gazellian?
       </h2>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white shadow-sm p-6 rounded-lg">
-          <h3 class="text-xl font-semibold customTextColor mb-2">
+      <div class="grid md:grid-cols-3 gap-12">
+        <div
+          class="bg-white shadow-md p-8 rounded-xl text-center hover:shadow-xl transition duration-300"
+        >
+          <h3 class="text-xl font-semibold customTextColor mb-3">
             Smart Budgeting
           </h3>
           <p class="text-gray-600">
-            Optimize your budget and receive service provider suggestions that
-            fit your financial plan.
+            Optimize your budget and receive personalized service provider
+            suggestions that fit your financial plan.
           </p>
         </div>
-        <div class="bg-white shadow-sm p-6 rounded-lg">
-          <h3 class="text-xl font-semibold customTextColor mb-2">
+        <div
+          class="bg-white shadow-md p-8 rounded-xl text-center hover:shadow-xl transition duration-300"
+        >
+          <h3 class="text-xl font-semibold customTextColor mb-3">
             Trusted Service Providers
           </h3>
           <p class="text-gray-600">
-            Browse verified vendors with ratings, reviews, and portfolios to
-            ensure quality services.
+            Explore verified vendors with ratings, reviews, and portfolios to
+            ensure quality and reliability.
           </p>
         </div>
-        <div class="bg-white shadow-sm p-6 rounded-lg">
-          <h3 class="text-xl font-semibold customTextColor mb-2">
+        <div
+          class="bg-white shadow-md p-8 rounded-xl text-center hover:shadow-xl transition duration-300"
+        >
+          <h3 class="text-xl font-semibold customTextColor mb-3">
             Seamless Booking
           </h3>
           <p class="text-gray-600">
             Book and communicate with service providers directly through our
-            platform.
+            platform for a smooth experience.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- Top-Rated Providers Section -->
-    <section class="max-w-6xl mx-auto py-16 px-6">
-      <h2 class="text-3xl font-bold text-center text-gray-900 mb-10">
-        Top-Rated Event Service Providers
+    <section class="max-w-7xl mx-auto pb-20 px-8">
+      <h2 class="text-2xl font-bold text-center text-gray-900 mb-12">
+        How It Works
       </h2>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-          <img
-            src="src/imgs/8f465b_1f146b8de2c645b58a9010e312be272b~mv2.avif"
-            class="w-full h-48 object-cover"
-            alt="Provider 1"
-          />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-900">Elegant Weddings</h3>
-            <p class="text-gray-600">
-              Expert wedding planning & decoration services.
-            </p>
+
+      <div
+        class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-8"
+      >
+        <!-- Step 1 -->
+        <div class="text-center group">
+          <div
+            class="relative w-10 h-10 mx-auto mb-4 flex items-center justify-center rounded-full bg-purple-100"
+          >
+            <span
+              class="text-md font-bold customTextColor group-hover:text-white"
+              >1</span
+            >
           </div>
+          <h3 class="text-md font-semibold mb-2">Find & Compare Services</h3>
+          <p class="text-gray-600 text-sm">
+            Search for event vendors based on category, location, and budget.
+          </p>
         </div>
-        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-          <img
-            src="src/imgs/istockphoto-1196172395-612x612.jpg"
-            class="w-full h-48 object-cover"
-            alt="Provider 2"
-          />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-900">Pro Photography</h3>
-            <p class="text-gray-600">
-              Capture your moments with high-quality photography.
-            </p>
-          </div>
+
+        <!-- Arrow -->
+        <div class="hidden md:block">
+          <svg
+            class="w-6 h-6 customTextColor"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
         </div>
-        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-          <img
-            src="src/imgs/dj-1020x574.png"
-            class="w-full h-48 object-cover"
-            alt="Provider 3"
-          />
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-gray-900">DJ & Sound Experts</h3>
-            <p class="text-gray-600">
-              Professional sound and lighting for any event.
-            </p>
+
+        <!-- Step 2 -->
+        <div class="text-center group">
+          <div
+            class="relative w-10 h-10 mx-auto mb-4 flex items-center justify-center rounded-full bg-purple-100"
+          >
+            <span
+              class="text-md font-bold customTextColor group-hover:text-white"
+              >2</span
+            >
           </div>
+          <h3 class="text-md font-semibold mb-2">Send Booking Requests</h3>
+          <p class="text-gray-600 text-sm">
+            Request a booking from service providers and get responses quickly.
+          </p>
+        </div>
+
+        <!-- Arrow -->
+        <div class="hidden md:block">
+          <svg
+            class="w-6 h-6 customTextColor"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="text-center group">
+          <div
+            class="relative w-10 h-10 mx-auto mb-4 flex items-center justify-center rounded-full bg-purple-100"
+          >
+            <span
+              class="text-md font-bold customTextColor group-hover:text-white"
+              >3</span
+            >
+          </div>
+          <h3 class="text-md font-semibold mb-2">Track Event Progress</h3>
+          <p class="text-gray-600 text-sm">
+            Monitor event updates, vendor communications, and bookings.
+          </p>
+        </div>
+
+        <!-- Arrow -->
+        <div class="hidden md:block">
+          <svg
+            class="w-6 h-6 customTextColor"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="text-center group">
+          <div
+            class="relative w-10 h-10 mx-auto mb-4 flex items-center justify-center rounded-full bg-purple-100"
+          >
+            <span
+              class="text-md font-bold customTextColor group-hover:text-white"
+              >4</span
+            >
+          </div>
+          <h3 class="text-md font-semibold mb-2">Enjoy Your Event</h3>
+          <p class="text-gray-600 text-sm">
+            Relax and let the service providers handle your event needs.
+          </p>
+        </div>
+
+        <!-- Arrow -->
+        <div class="hidden md:block">
+          <svg
+            class="w-6 h-6 customTextColor"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="text-center group">
+          <div
+            class="relative w-10 h-10 mx-auto mb-4 flex items-center justify-center rounded-full bg-purple-100"
+          >
+            <span
+              class="text-md font-bold customTextColor group-hover:text-white"
+              >5</span
+            >
+          </div>
+          <h3 class="text-md font-semibold mb-2">Rate & Review Vendors</h3>
+          <p class="text-gray-600 text-sm">
+            Give feedback and ratings to help others choose the best services.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white text-center py-6">
-      <p>© 2024 Gazellian. All rights reserved.</p>
-    </footer>
+    <!-- Call to Action -->
+    <section
+      class="text-center py-20 bg-gradient-to-r from-[#9960ac] to-[#9973ac] text-white"
+    >
+      <h2 class="text-3xl font-bold mb-4">Start Planning Your Event Today</h2>
+      <p class="text-md opacity-90">
+        Join thousands of users who trust Gazellian for event planning.
+      </p>
+      <a
+        href="register.html"
+        class="bg-white customTextColor inline-block mt-6 px-6 py-3 text-sm rounded-full font-semibold shadow-md"
+      >
+        Sign Up Now
+      </a>
+    </section>
+
     <script>
       if (localStorage.getItem("token") != null) {
         document.getElementById(
@@ -257,12 +393,7 @@
         Logout
       </button>`;
 
-        document.getElementById("startLink").innerHTML = `<a
-          href="serviceProviders.html"
-          class="px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 hover:text-gray-600"
-          style="border: 2px solid white"
-          >Get Started</a
-        >`;
+        document.getElementById("startLink").href = "serviceProviders.html";
       } else if (localStorage.getItem("token") == null) {
         document.getElementById("userLoggedIn").innerHTML = `
       <a href="index.html"
@@ -274,12 +405,7 @@
         Sign up
       </a>`;
 
-        document.getElementById("startLink").innerHTML = `<a
-          href="register.html"
-          class="px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 hover:text-gray-600"
-          style="border: 2px solid white"
-          >Get Started</a
-        >`;
+        document.getElementById("startLink").href = "register.html";
       }
     </script>
   </body>

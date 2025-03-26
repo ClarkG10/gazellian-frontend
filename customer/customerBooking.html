@@ -85,6 +85,89 @@
         </div>
       </div>
     </div>
+
+    <div
+      id="reviewModal"
+      class="fixed hidden z-100 w-full h-full flex items-center justify-center"
+      style="
+        /* background-color: black; */
+        background: rgba(95, 95, 95, 0.5); /* Black with 50% opacity */
+      "
+    >
+      <div class="w-1/4 max-w-md p-6 bg-white rounded-xl">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-md font-bold text-gray-900">Leave a Review</h3>
+          <button
+            class="flex items-center justify-center px-2 h-6 text-xs rounded-full font-medium text-gray-700 hover:bg-gray-300"
+            onclick="closeReviewModal()"
+          >
+            X
+          </button>
+        </div>
+        <div class="mt-2">
+          <form id="send_review_form">
+            <div>
+              <input type="hidden" name="service_id" id="serviceId" />
+              <input type="hidden" name="customer_id" id="customerId" />
+              <input type="hidden" name="provider_id" id="providerId" />
+              <!-- select rating -->
+              <label
+                for="rating"
+                class="block mb-2 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Rating
+              </label>
+              <select
+                id="rating"
+                name="rating"
+                class="block w-full px-3 py-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="none">Select Rating</option>
+                <option value="5">
+                  &#9733;&#9733;&#9733;&#9733;&#9733; (5 Stars)
+                </option>
+                <option value="4">
+                  &#9733;&#9733;&#9733;&#9733;&#9734; (4 Stars)
+                </option>
+                <option value="3">
+                  &#9733;&#9733;&#9733;&#9734;&#9734; (3 Stars)
+                </option>
+                <option value="2">
+                  &#9733;&#9733;&#9734;&#9734;&#9734; (2 Stars)
+                </option>
+                <option value="1">
+                  &#9733;&#9734;&#9734;&#9734;&#9734; (1 Star)
+                </option>
+                <option value="0">
+                  &#9734;&#9734;&#9734;&#9734;&#9734; (0 Star)
+                </option>
+              </select>
+              <!-- textarea review -->
+              <label
+                for="review"
+                class="block mb-2 mt-4 text-sm font-medium text-gray-900 light:text-white"
+              >
+                Write a Review
+              </label>
+              <textarea
+                id="review"
+                name="review_text"
+                class="block w-full px-3 py-2 mb-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                rows="5"
+                placeholder="Write a review..."
+              ></textarea>
+            </div>
+            <!-- button book now -->
+            <button
+              type="submit"
+              class="w-full py-2 text-sm font-medium text-white rounded-lg customBg sendReviewButton"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
     <nav class="bg-white border-gray-200 light:bg-gray-900">
       <div
         class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4"
@@ -203,13 +286,7 @@
                 >Budget</a
               >
             </li>
-            <li>
-              <a
-                href="providerManager.html"
-                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
-                >Manage Service Providers</a
-              >
-            </li>
+
             <li>
               <a
                 href="customerBooking.html"
@@ -222,6 +299,13 @@
                 href="events.html"
                 class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
                 >My Events</a
+              >
+            </li>
+            <li>
+              <a
+                href="account.html"
+                class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-gray-600 md:p-0 light:text-white md:light:hover:text-gray-500 light:hover:bg-gray-700 light:hover:text-gray-500 md:light:hover:bg-transparent light:border-gray-700"
+                >Manage Account</a
               >
             </li>
           </ul>
@@ -268,7 +352,7 @@
               <th class="px-6 py-3">Book Date</th>
               <th class="px-6 py-3">Service</th>
               <th class="px-6 py-3">Requested Amount</th>
-              <th class="px-6 py-3">Created At</th>
+              <th class="px-6 py-3">Note</th>
               <th class="px-6 py-3">Status</th>
               <th class="px-6 py-3">Payment</th>
               <th class="px-6 py-3">Actions</th>
@@ -346,6 +430,10 @@
         class="text-white customBg hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 light:bg-gray-600 light:hover:bg-gray-700 focus:outline-none light:focus:ring-gray-800">
         Sign up
       </a>`;
+      }
+
+      function closeReviewModal() {
+        document.getElementById("reviewModal").classList.add("hidden");
       }
     </script>
   </body>

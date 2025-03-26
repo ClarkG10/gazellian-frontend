@@ -140,6 +140,8 @@ function createToast(message, type = "info") {
       ? "bg-red-500"
       : type === "reminder"
       ? "bg-yellow-500"
+      : type === "failed"
+      ? "bg-red-500"
       : "bg-blue-500"
   }`;
 
@@ -167,6 +169,30 @@ function createToast(message, type = "info") {
 }
 
 if (localStorage.getItem("token") !== null) {
+  async function fetchNotification() {
+    const CACHE_NAME = "notification-cache";
+    const NOTIFICATION_URL = backendURL + "/api/notification/users/index";
+
+    const cache = await caches.open(CACHE_NAME);
+
+    const response = await fetch(NOTIFICATION_URL, {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    const notifData = await response.json();
+
+    cache.put(NOTIFICATION_URL, new Response(JSON.stringify(notifData)));
+
+    localStorage.setItem("notifDataLoaded", "true");
+  }
+
   let previousLength = 0;
 
   const eventSource = new EventSource(backendURL + "/api/notification/stream", {
@@ -198,20 +224,58 @@ if (localStorage.getItem("token") !== null) {
           parseInt(data.status) === 0
       )
     ) {
-      console.log(updatedLength, previousLength);
-
       if (updatedLength !== previousLength) {
-        console.log("New notification received");
         getNotif();
 
         if (updatedLength > previousLength) {
-          createToast("New notification received", updatedData[0].type);
+          if (
+            parseInt(updatedData[updatedData.length - 1].user_id) ===
+              parseInt(userId) &&
+            updatedData[updatedData.length - 1].header_text !==
+              "New Booking Request"
+          ) {
+            createToast(
+              "New notification received. Check your notifications.",
+              updatedData[updatedData.length - 1].type
+            );
+            fetchNotification();
+          } else if (
+            updatedData[updatedData.length - 1].header_text ===
+            "New Booking Request"
+          ) {
+            createToast(
+              "New booking request received. Check your bookings.",
+              "booking"
+            );
+          }
         }
 
         previousLength = updatedLength;
       }
     }
   };
+
+  // Function to fetch and update cache
+  async function fetchChatDatas() {
+    const CACHE_NAME = "chats-cache";
+    const CHAT_MESSAGES_URL = backendURL + "/api/message/users/index";
+
+    const cache = await caches.open(CACHE_NAME);
+    const response = await fetch(CHAT_MESSAGES_URL, {
+      headers: {
+        Accept: "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch messages");
+      return;
+    }
+
+    const chatDataCached = await response.json();
+    cache.put(CHAT_MESSAGES_URL, new Response(JSON.stringify(chatDataCached)));
+  }
 
   let prevMessageLength = 0;
 
@@ -255,6 +319,7 @@ if (localStorage.getItem("token") !== null) {
       )
     ) {
       if (updatedLength !== prevMessageLength) {
+        fetchChatDatas();
         console.log("New Message received");
         getBadgeMessage();
         prevMessageLength = updatedLength;
@@ -266,6 +331,78 @@ if (localStorage.getItem("token") !== null) {
     console.error("SSE error:", error);
     eventSource.close();
   };
+
+  if (localStorage.getItem("type") === "service provider") {
+    async function fetchBooking() {
+      try {
+        const CACHE_NAME = "booking-cache";
+        const SPBOOKING_URL = backendURL + "/api/booking/provider/index";
+
+        const cache = await caches.open(CACHE_NAME);
+
+        const response = await fetch(SPBOOKING_URL, {
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const bookingData = await response.json();
+
+        await cache.put(
+          SPBOOKING_URL,
+          new Response(JSON.stringify(bookingData))
+        );
+      } catch (error) {
+        console.error("Error fetching booking data:", error);
+      }
+    }
+
+    const eventSource = new EventSource(backendURL + "/api/booking/stream", {
+      withCredentials: true,
+    });
+
+    let previousLength = 0;
+
+    eventSource.onmessage = async (event) => {
+      const updatedData = JSON.parse(event.data);
+      const updatedLength = Array.isArray(updatedData) ? updatedData.length : 1;
+
+      // if (updatedLength > previousLength && previousLength === 0) {
+      //   previousLength = updatedLength;
+      //   return;
+      // }
+
+      if (previousLength === 0) {
+        previousLength = updatedLength;
+        return;
+      }
+
+      if (
+        Array.isArray(updatedData) &&
+        updatedData.some(
+          (data) =>
+            parseInt(data.provider_id) === parseInt(userId) &&
+            data.status === "pending"
+        )
+      ) {
+        if (updatedLength !== previousLength) {
+          await fetchBooking();
+          previousLength = updatedLength;
+        }
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE error:", error);
+      eventSource.close();
+      window.reload();
+    };
+  }
 }
 
 export {
