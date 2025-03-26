@@ -1,4 +1,8 @@
+import { setRouter } from "../router/router.js";
+
 const backendURL = "http://gazellian.test";
+
+setRouter();
 
 async function userlogged() {
   const response = await fetch(backendURL + "/api/show/profile", {

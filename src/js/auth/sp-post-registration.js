@@ -1,4 +1,4 @@
-import { backendURL, logout, userlogged } from "../utils/utils.js";
+import { backendURL, userlogged } from "../utils/utils.js";
 
 const post_register_form = document.getElementById("post_register_form");
 
